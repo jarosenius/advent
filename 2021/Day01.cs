@@ -20,13 +20,9 @@ namespace Advent.y2021
         }
         public override async Task<long> Part2(IEnumerable<string> input)
         {
-            var threeMeasure = new List<int>();
             var nums = input.Select(n => int.Parse(n)).ToList();
-            var _ = nums.Select((n, idx) => {
-                if(nums.Skip(idx).Count() >= 3)
-                    threeMeasure.Add(nums.Skip(idx).Take(3).Sum());
-                return 0;
-            }).ToList();
+            var numbersToUse = (nums.Count / 3) * 3;
+            var threeMeasure = nums.Take(numbersToUse).Select((n, idx) => nums.Skip(idx).Take(3).Sum()).ToList();
             await Task.CompletedTask;
             return GetIncreases(threeMeasure);
         }
