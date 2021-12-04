@@ -15,12 +15,10 @@ namespace Advent.y202x
 
         public override long Part1(IEnumerable<string> input)
         {
-            
             return 0;
         }
         public override long Part2(IEnumerable<string> input)
         {
-            
             return 0;
         }
     }

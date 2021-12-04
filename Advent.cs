@@ -9,11 +9,24 @@ namespace Advent
 {
     public abstract class Advent
     {
-        public static Dictionary<int, Type> SupportedYears = new Dictionary<int, Type>
+        private static Dictionary<int, Type> supportedYears;
+        public static Dictionary<int, Type> SupportedYears 
         {
-            {2020, typeof(Advent2020)}, 
-            {2021, typeof(Advent2021)}
-        };
+            get { return supportedYears ?? (supportedYears = GetSupportedYears()); }
+        }
+
+
+        public static Dictionary<int, Type> GetSupportedYears()
+        {
+            var typesWithMyAttribute =
+            from a in AppDomain.CurrentDomain.GetAssemblies()
+            from t in a.GetTypes()
+            let attributes = t.GetCustomAttributes(typeof(AoCAttribute), false)
+            where t != null && t.IsSubclassOf(typeof(Advent)) && t.IsAbstract == false && attributes.OfType<AoCAttribute>().Any()
+            select new KeyValuePair<int, Type>(attributes.Cast<AoCAttribute>().FirstOrDefault().Year, t);
+
+            return typesWithMyAttribute.ToDictionary(x => x.Key, x => x.Value);
+        }
 
         public static Advent CreateForYear(int year)
         {
