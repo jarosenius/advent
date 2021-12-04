@@ -13,8 +13,8 @@ namespace Advent
         static int Latest = DateTime.Now.Day > 25 ? 25 : DateTime.Now.Day;
         public class Options
         {
-            [Option('y', "year", Required = false, Default = 2021, HelpText = "Set year to run.")]
-            public int Year {get;set;} = 2021;
+            [Option('y', "year", Required = false, HelpText = "Set year to run. Defaults to last supported year.")]
+            public int Year {get;set;} = Advent.SupportedYears.Last().Key;
 
             [Option('e', "useExample", Required = false, Default = false, HelpText = "Set to true to use example data.")]
             public bool UseExample {get;set;} = false;
