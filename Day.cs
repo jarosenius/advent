@@ -53,7 +53,7 @@ namespace Advent
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Part 1: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"{ResultPart1}\t\t");
+            Console.Write($"{ResultPart1}".PadRight(15));
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("| ");
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -61,7 +61,7 @@ namespace Advent
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Part 2: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"{ResultPart2}\t\t");
+            Console.Write($"{ResultPart2}".PadRight(15));
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("| ");
             Console.ForegroundColor = ConsoleColor.Yellow;

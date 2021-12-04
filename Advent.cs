@@ -25,26 +25,19 @@ namespace Advent
 
         public async Task Solve(bool useExampleData, params int[] daysToSolve)
         {
-            var tasks = new List<Task>();
+            Days.TryGetValue(daysToSolve.First(), out var day);
+            await day?.Solve(true); // First run is a bit slower so run it once before the real run.
 
-            foreach(var d in daysToSolve)
+            await Parallel.ForEachAsync(daysToSolve, async (d, c) => 
             {
                 if(Days.TryGetValue(d, out var day) == false)
                 {
                     Console.WriteLine($"Could not find day {d}");
-                    continue;
-                }
-                if(IsFirstRun)
-                {
-                    Console.WriteLine($"First run since startup. Running day {d} twice.");
-                    await day.Solve(useExampleData);
-                    IsFirstRun = false;
+                    await Task.CompletedTask;
                 }
 
-                tasks.Add(day.Solve(useExampleData));
-            }
-
-            await Task.WhenAll(tasks);
+                await day.Solve(useExampleData);
+            });
         }
 
         public void PresentResults(params int[] daysToPresent)
