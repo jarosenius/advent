@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var limits = new Dictionary<string, (int Min, int Max)[]>();
             var limitsRaw = new List<string>();
@@ -28,9 +28,9 @@ namespace Advent.y2020
             var ticket = ticketRaw.ElementAt(1).Split(",").Select(long.Parse);
             var neighbors = neighborRaw.Skip(1).Select(n => n.Split(",")).Select(x => x.Select(y => int.Parse(y)));
   
-            await Task.CompletedTask; return Part1(limits, neighbors, ticket);
+             return Part1(limits, neighbors, ticket);
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var limits = new Dictionary<string, (int Min, int Max)[]>();
             var limitsRaw = new List<string>();
@@ -45,7 +45,7 @@ namespace Advent.y2020
             var ticket = ticketRaw.ElementAt(1).Split(",").Select(long.Parse);
             var neighbors = neighborRaw.Skip(1).Select(n => n.Split(",")).Select(x => x.Select(y => int.Parse(y)));
   
-            await Task.CompletedTask; return Part2(limits, neighbors, ticket);;
+             return Part2(limits, neighbors, ticket);;
         }
 
         static long Part1(Dictionary<string, (int Min, int Max)[]> limits, IEnumerable<IEnumerable<int>> neighbors, IEnumerable<long> ticket)

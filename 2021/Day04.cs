@@ -14,17 +14,15 @@ namespace Advent.y2021
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var bn = GetBoardsAndNumbers(input);
-            await Task.CompletedTask; 
             return GetWinner(bn.Boards, bn.Numbers, false);
         }
 
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var bn = GetBoardsAndNumbers(input);
-            await Task.CompletedTask; 
             return GetWinner(bn.Boards, bn.Numbers, true);
         }
 

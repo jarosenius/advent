@@ -14,14 +14,14 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
-            await Task.CompletedTask;
+            
             return input.Where(i => string.IsNullOrEmpty(i) == false).Select(i => long.Parse(Parse(i))).Aggregate(0L, (total, next) => total += next);
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
-            await Task.CompletedTask;
+            
 			return input.Where(i => string.IsNullOrEmpty(i) == false).Select(i => long.Parse(Parse2(i))).Aggregate(0L, (total, next) => total += next);
         }
 

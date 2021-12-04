@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var passports = new List<List<Tuple<string, string>>>();
             var passport = new List<Tuple<string, string>>();
@@ -35,10 +35,10 @@ namespace Advent.y2020
 
             var expectedFields = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
             var optionalFields = new[] { "cid" };
-            await Task.CompletedTask;
+            
             return Day4_1(passports, expectedFields, optionalFields);
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var passports = new List<List<Tuple<string, string>>>();
             var passport = new List<Tuple<string, string>>();
@@ -60,7 +60,7 @@ namespace Advent.y2020
 
             var expectedFields = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
             var optionalFields = new[] { "cid" };
-            await Task.CompletedTask;
+            
             return Day4_2(passports, expectedFields);
         }
 

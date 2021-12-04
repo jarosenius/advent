@@ -15,18 +15,18 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var target = 2020;
             List<int> numbers = GetAnswer(input, target);
-            await Task.CompletedTask;
+            
             return numbers[target - 1];
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var target = 30000000;
             var numbers = GetAnswer(input, target);
-            await Task.CompletedTask;
+            
             return numbers[target - 1];
         }
 

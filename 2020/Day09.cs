@@ -13,9 +13,9 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
-            await Task.CompletedTask; return Part1(input, 25);
+             return Part1(input, 25);
         }
         static long Part1(IEnumerable<string> input, int save)
         {
@@ -55,10 +55,10 @@ namespace Advent.y2020
             return valid;
         }
 
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var part1 = Part1(input, 25);
-            await Task.CompletedTask; return 
+             return 
             Part2(input, 2, part1);
         }
 

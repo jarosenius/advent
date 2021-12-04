@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var rules = new List<Tuple<string, List<string>>>();
             foreach (var rawRule in input)
@@ -35,10 +35,10 @@ namespace Advent.y2020
                 rules.Add(Tuple.Create(color, containsColor));
             }
 
-            await Task.CompletedTask;
+            
             return GetNumberOfBagsThatFitColor("shiny gold", rules);
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var rules = new List<Tuple<string, List<string>>>();
             foreach (var rawRule in input)
@@ -59,7 +59,7 @@ namespace Advent.y2020
                 rules.Add(Tuple.Create(color, containsColor));
             }
 
-            await Task.CompletedTask;
+            
             return GetBagsRequiredForRule("shiny gold", rules)-1;
         }
 

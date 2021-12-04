@@ -13,14 +13,14 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
-            await Task.CompletedTask;
+            
             return 0;
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
-            await Task.CompletedTask;
+            
             return 0;
         }
     }

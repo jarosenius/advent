@@ -13,15 +13,15 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
-            await Task.CompletedTask; 
+             
             var ids = input.Where(i => i.Count() == 10).Select(i => GetSeatId(i.Substring(0, 7), i.Substring(7), 0, 127, 0, 7)).ToList();
             return ids.Any() ? ids.Max() : 0;
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
-            await Task.CompletedTask; 
+             
             var ids = input.Where(i => i.Count() == 10).Select(i => GetSeatId(i.Substring(0, 7), i.Substring(7), 0, 127, 0, 7)).ToList();
             var occupied = new int[127*8];
             ids.ForEach(id => {

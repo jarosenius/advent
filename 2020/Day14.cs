@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var memory = new Dictionary<int, long>();
             var mask = "";
@@ -33,10 +33,10 @@ namespace Advent.y2020
                 }
             }
 
-            await Task.CompletedTask;
+            
             return memory.Values.Sum();
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var memory = new Dictionary<long, long>();
             var mask = "";
@@ -58,7 +58,7 @@ namespace Advent.y2020
                 }
             }
 
-            await Task.CompletedTask;
+            
             return memory.Values.Sum();
         }
 

@@ -13,14 +13,14 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
-            await Task.CompletedTask;  
+              
             return CountTrees(input, 3, 1);;
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
-            await Task.CompletedTask; return CountTrees(input, 1, 1)
+             return CountTrees(input, 1, 1)
             * CountTrees(input, 3, 1)
             * CountTrees(input, 5, 1)
             * CountTrees(input, 7, 1)

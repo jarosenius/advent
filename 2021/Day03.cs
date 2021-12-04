@@ -15,7 +15,7 @@ namespace Advent.y2021
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             StringBuilder sb = new();
 
@@ -28,17 +28,15 @@ namespace Advent.y2021
             var inverted = Helper.InvertBinaryString(str);
 
             var res = Helper.ConvertFromBinaryString(str) * Helper.ConvertFromBinaryString(inverted);
-
-            await Task.CompletedTask; 
+             
             return res;
         }
         
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var oxygen = GetData(input, r => r.Ones >= r.Zeroes);
             var co2 = GetData(input, r => r.Ones < r.Zeroes);
-
-            await Task.CompletedTask; 
+             
             return oxygen * co2;
         }
 

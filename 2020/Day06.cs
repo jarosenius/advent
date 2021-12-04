@@ -30,7 +30,7 @@ namespace Advent.y2020
             groups.Add(group);
             return groups;
         }
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var groups = GetGroups(input);
             var count = 0;
@@ -38,10 +38,10 @@ namespace Advent.y2020
             {
                 count += group.SelectMany(s => s.ToCharArray()).ToList().Distinct().Count();         
             }
-            await Task.CompletedTask; 
+             
             return count;
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var groups = GetGroups(input);
             var count = 0;
@@ -54,7 +54,7 @@ namespace Advent.y2020
                         count++;
                 }         
             }
-            await Task.CompletedTask;
+            
             return count;
         }
     }

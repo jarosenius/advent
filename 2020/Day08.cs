@@ -13,12 +13,12 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
-            await Task.CompletedTask; 
+             
             return RunInstructions(input);
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var instr = input.ToArray();
             var res = new List<Tuple<long, bool>>();
@@ -34,7 +34,7 @@ namespace Advent.y2020
                 }
             }
             var item = res.FirstOrDefault(itm => itm.Item2 == false);
-            await Task.CompletedTask;
+            
             return item.Item1;
         }
 

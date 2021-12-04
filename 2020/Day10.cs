@@ -13,20 +13,20 @@ namespace Advent.y2020
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             var list = input.Select(int.Parse);
-            await Task.CompletedTask;
+            
             return GetAdapters(list, 0, list.Max() + 3, 3, 0, 0);
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             var maxDiff = 3;
             var list = new[] { 0 }.Concat(input.Select(int.Parse));
             var target = list.Max() + maxDiff;
             list = list.OrderBy(i => i).Reverse();
             Console.Clear();
-            await Task.CompletedTask;
+            
             return GetCombinations(list, maxDiff, target);
         }
 

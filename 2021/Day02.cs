@@ -13,7 +13,7 @@ namespace Advent.y2021
             
         }
 
-        public override async Task<long> Part1(IEnumerable<string> input)
+        public override long Part1(IEnumerable<string> input)
         {
             long hpos = 0;
             long vpos = 0;
@@ -22,10 +22,10 @@ namespace Advent.y2021
             hpos += groups.FirstOrDefault(g => g.Key == Direction.Forward).Sum(g => g.Moves);
             vpos += groups.FirstOrDefault(g => g.Key == Direction.Down).Sum(g => g.Moves);
             vpos -= groups.FirstOrDefault(g => g.Key == Direction.Up).Sum(g => g.Moves);
-            await Task.CompletedTask; 
+             
             return hpos * vpos;
         }
-        public override async Task<long> Part2(IEnumerable<string> input)
+        public override long Part2(IEnumerable<string> input)
         {
             long hpos = 0;
             long vpos = 0;
@@ -48,7 +48,7 @@ namespace Advent.y2021
                         break;
                 }
             });
-            await Task.CompletedTask; 
+             
             return hpos * vpos;
         }
 
