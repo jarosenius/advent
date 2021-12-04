@@ -2,11 +2,28 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Advent.y2020;
+using Advent.y2021;
 
 namespace Advent
 {
     public abstract class Advent
     {
+        public static Dictionary<int, Type> SupportedYears = new Dictionary<int, Type>
+        {
+            {2020, typeof(Advent2020)}, 
+            {2021, typeof(Advent2021)}
+        };
+
+        public static Advent CreateForYear(int year)
+        {
+            if(SupportedYears.TryGetValue(year, out var advent))
+            {
+                return (Advent)Activator.CreateInstance(advent);
+            }
+            return null;
+        }
+
         public readonly int YEAR;
         public bool IsFirstRun = true;
         public Advent(int year)
@@ -56,5 +73,7 @@ namespace Advent
             var days = Days.Where(d => d.Value.HasSolution).ToList();
             days.ForEach(d => d.Value.PresentResult());
         }
+
+
     }
 }
