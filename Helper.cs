@@ -28,5 +28,13 @@ namespace Advent
         {
             return bin.Aggregate("", (r, c) => c == '1' ? r+="0" : r+="1");
         }
+
+        public static IEnumerable<T> SliceColumn<T>(this T[][] matrix, int column)
+        {
+            for (var x = 0; x < matrix.Length; x++)
+            {
+                yield return matrix[x][column];
+            }
+        }
     }
 }
