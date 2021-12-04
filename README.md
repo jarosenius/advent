@@ -1,5 +1,8 @@
 # Advent of Code
 
+Setup a new year with
+> dotnet run --setupYear 2021 # Replace 2021 with the year you want to setup.
+
 ## Options
 
 > --day, -d value :  Sets the day to run. Valid values are -1 (Today), 0 (All days) and 1-25 (The specified day) 

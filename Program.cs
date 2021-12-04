@@ -23,7 +23,7 @@ namespace Advent
             [Option('d', "day", Required = false, Default = 0, HelpText = "Day to run (1-25). 0 will run all days. -1 or invalid value will run the latest day.")]
             public int Day {get;set;} = 0;
 
-            [Option('s', "setupYear", Required = false, HelpText = "Day to run (1-25). 0 will run all days. -1 or invalid value will run the latest day.")]
+            [Option('s', "setupYear", Required = false, HelpText = "Setup folders and files for a new year. Must be a number.")]
             public int? SetupYear {get;set;}
         }
         
