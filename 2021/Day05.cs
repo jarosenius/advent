@@ -79,23 +79,6 @@ namespace Advent.y2021
 
             private List<Coordinate> GetAllCoordinates()
             {
-                if(IsHorizontal)
-                {
-                    var min = Math.Min(Start.X, End.X);
-                    var max = Math.Max(Start.X, End.X);
-                    var count = max - min;
-                    return Enumerable.Range(min, count + 1).Select(x => new Coordinate(x, Start.Y)).ToList();
-                }
-                else if(IsVertical)
-                {
-                    var min = Math.Min(Start.Y, End.Y);
-                    var max = Math.Max(Start.Y, End.Y);
-                    var count = max - min;
-                    return Enumerable.Range(min, count + 1).Select(y => new Coordinate(Start.X, y)).ToList();
-                }
-
-                // IsDiagonal
-
                 var minX = Math.Min(Start.X, End.X);
                 var maxX = Math.Max(Start.X, End.X);
                 var minY = Math.Min(Start.Y, End.Y);
@@ -103,6 +86,16 @@ namespace Advent.y2021
                 var countX = Math.Abs(maxX - minX);
                 var countY = Math.Abs(maxY - minY);
 
+                if(IsHorizontal)
+                {
+                    return Enumerable.Range(minX, countX + 1).Select(x => new Coordinate(x, Start.Y)).ToList();
+                }
+                else if(IsVertical)
+                {
+                    return Enumerable.Range(minY, countY + 1).Select(y => new Coordinate(Start.X, y)).ToList();
+                }
+
+                // IsDiagonal
                 if(countX != countY)
                     throw new ArgumentException("Cannot handle this type of diagonal");
 
