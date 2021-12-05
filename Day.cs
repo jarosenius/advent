@@ -41,7 +41,7 @@ namespace Advent
             ResultPart2 = Part2(example ? ExampleInput.ToList() : Input.ToList());
             sw.Stop();
             TimeToExecutePart2 = sw.Elapsed;
-            HasSolution = true;
+            HasSolution = ResultPart1 != 0 || ResultPart2 != 0;
             return (ResultPart1, TimeToExecutePart1.TotalMilliseconds, ResultPart2, TimeToExecutePart2.TotalMilliseconds);
         }
 
