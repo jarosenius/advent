@@ -11,7 +11,7 @@ namespace Advent.y2021
 
         public override long Part1(List<string> input)
         {
-            return GetIncreases(input.Select(n => int.Parse(n)).ToList());
+            return GetIncreases(input.ReadLinesAsInt());
         }
         public override long Part2(List<string> input)
         {
@@ -22,7 +22,7 @@ namespace Advent.y2021
             return GetIncreases(threeMeasure);
         }
 
-        private long GetIncreases(List<int> nums)
+        private long GetIncreases(IEnumerable<int> nums)
         {
             return nums.Zip(nums.Skip(1), (previous, current) => current > previous ? 1 : 0).Sum();
         }

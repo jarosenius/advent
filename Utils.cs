@@ -36,6 +36,10 @@ namespace Advent
                 yield return matrix[x][column];
             }
         }
+        public static IEnumerable<int> ReadLinesAsInt(this IEnumerable<string> lines)
+        {
+            return lines.Select(n => int.Parse(n));
+        }
 
         public static int[][] SplitByFirstThenBySecondAndParseToInt(this string line, string splitFirst, string splitSecond)
         {
