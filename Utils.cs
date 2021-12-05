@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Advent
 {
-    public static class Helper
+    public static class Utils
     {
         public static string GetInputForDay(int day, int year)
         {
@@ -35,6 +35,26 @@ namespace Advent
             {
                 yield return matrix[x][column];
             }
+        }
+
+        public static int[][] SplitByFirstThenBySecondAndParseToInt(this string line, string splitFirst, string splitSecond)
+        {
+            return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries).Select(p => p.SplitByAndParseToInt(splitSecond)).ToArray();
+        }
+
+        public static int[] SplitByAndParseToInt(this string line, string split)
+        {
+            return line.Split(split, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+        }
+
+        public static T[][] CreateMapWithSize<T>(int width, int length)
+        {
+            var grid = new T[length][];
+            for (int i = 0; i < grid.Length; i++)
+            {
+                grid[i] = new T[width];
+            }
+            return grid;
         }
     }
 }

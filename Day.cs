@@ -29,8 +29,8 @@ namespace Advent
         public async Task<(long Part1Result, double Part1Ms, long Part2Result, double Part2Ms)> Solve(bool example)
         {
             UsedExampleData = example;
-            ExampleInput = await File.ReadAllLinesAsync(Helper.GetExampleInputForDay(DAY, YEAR));
-            Input = await File.ReadAllLinesAsync(Helper.GetInputForDay(DAY, YEAR));
+            ExampleInput = await File.ReadAllLinesAsync(Utils.GetExampleInputForDay(DAY, YEAR));
+            Input = await File.ReadAllLinesAsync(Utils.GetInputForDay(DAY, YEAR));
 
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();

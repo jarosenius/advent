@@ -25,9 +25,9 @@ namespace Advent.y2021
                 sb.Append(r.Ones > r.Zeroes ? "1" : "0");
             }
             var str = sb.ToString();
-            var inverted = Helper.InvertBinaryString(str);
+            var inverted = Utils.InvertBinaryString(str);
 
-            var res = Helper.ConvertFromBinaryString(str) * Helper.ConvertFromBinaryString(inverted);
+            var res = Utils.ConvertFromBinaryString(str) * Utils.ConvertFromBinaryString(inverted);
              
             return res;
         }
@@ -51,7 +51,7 @@ namespace Advent.y2021
                 if(modifiedInput.Count == 1)
                     break;
             }
-            return Helper.ConvertFromBinaryString(modifiedInput[0]);
+            return Utils.ConvertFromBinaryString(modifiedInput[0]);
         }
 
         private (int Ones, int Zeroes) GetMostCommonAtPosition(IEnumerable<string> input, int i)

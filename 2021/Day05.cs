@@ -15,43 +15,33 @@ namespace Advent.y2021
 
         public override long Part1(IEnumerable<string> input)
         {
-            var vents = GetVents(input, true);
+            var vents = GetVents(input.ToList(), true);
             return CountOverlappingAtleastNTimes(vents, 2);
         }
 
         public override long Part2(IEnumerable<string> input)
         {
-            var vents = GetVents(input, false);
+            var vents = GetVents(input.ToList(), false);
             return CountOverlappingAtleastNTimes(vents, 2);
         }
 
         private long CountOverlappingAtleastNTimes(List<Vent> vents, int n)
         {
             var coordinates = vents.SelectMany(v => v.AllCoordinates).ToList();
-            
-            var width = coordinates.Max(v => v.X)+1;
-            var length = coordinates.Max(v => v.Y)+1;
-            var grid = new int[length][];
-            for (int i = 0; i < grid.Length; i++)
-            {
-                grid[i] = new int[width];
-            }
-            coordinates.ForEach(c =>  grid[c.Y][c.X]+=1);
+            var grid = Utils.CreateMapWithSize<int>(coordinates.Max(v => v.X)+1, coordinates.Max(v => v.Y)+1);
+            coordinates.ForEach(c => grid[c.Y][c.X]+=1);
             return grid.Sum(r => r.Count(c => c >= n));
         }
 
-        private List<Vent> GetVents(IEnumerable<string> input, bool skipDiagonal)
+        private List<Vent> GetVents(List<string> input, bool skipDiagonal)
         {
             List<Vent> res = new();
-
-            foreach (var line in input)
+            input.ForEach(line =>
             {
-                var parts = line.Split(" -> ");
-                var start = parts[0].Split(",").Select(int.Parse).ToArray();
-                var end = parts[1].Split(",").Select(int.Parse).ToArray();
+                var parts = line.SplitByFirstThenBySecondAndParseToInt(" -> ", ",");
+                res.Add(new Vent(parts[0][0], parts[0][1], parts[1][0], parts[1][1]));
+            });
 
-                res.Add(new Vent(start[0], start[1], end[0], end[1]));
-            }
             return skipDiagonal ? res.Where(v => v.IsDiagonal == false).ToList() : res;
         }
 

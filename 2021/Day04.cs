@@ -50,7 +50,7 @@ namespace Advent.y2021
 
         private (List<int> Numbers, List<Board> Boards) GetBoardsAndNumbers(IEnumerable<string> input)
         {
-            var numbers = input.Take(1).SelectMany(s => s.Split(",").Select(c => int.Parse(c))).ToList();
+            var numbers = input.Take(1).SelectMany(s => s.SplitByAndParseToInt(",")).ToList();
 
             List<Board> boards = new();
             var i = 2;
@@ -106,7 +106,7 @@ namespace Advent.y2021
 
             public static Board Create(IEnumerable<string> input)
             {
-                var rows = input.Select(s => s.Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(n => int.Parse(n)));
+                var rows = input.Select(s => s.SplitByAndParseToInt(" "));
                 return new Board(rows);
             }
 
