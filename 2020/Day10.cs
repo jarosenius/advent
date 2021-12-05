@@ -13,13 +13,13 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             var list = input.Select(int.Parse);
             
             return GetAdapters(list, 0, list.Max() + 3, 3, 0, 0);
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var maxDiff = 3;
             var list = new[] { 0 }.Concat(input.Select(int.Parse));

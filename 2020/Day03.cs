@@ -13,12 +13,12 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
               
             return CountTrees(input, 3, 1);;
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
              return CountTrees(input, 1, 1)
             * CountTrees(input, 3, 1)

@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace Advent.y2021
 {
     public class Day01 : Day
@@ -13,11 +9,11 @@ namespace Advent.y2021
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             return GetIncreases(input.Select(n => int.Parse(n)).ToList());
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var nums = input.Select(n => int.Parse(n)).ToList();
             var numbersToUse = (nums.Count / 3) * 3;

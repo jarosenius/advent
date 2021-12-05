@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace Advent.y2021
 {
     public class Day05 : Day
@@ -13,13 +10,13 @@ namespace Advent.y2021
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             var vents = GetVents(input.ToList(), true);
             return CountOverlappingAtleastNTimes(vents, 2);
         }
 
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var vents = GetVents(input.ToList(), false);
             return CountOverlappingAtleastNTimes(vents, 2);

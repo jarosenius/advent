@@ -34,11 +34,11 @@ namespace Advent
 
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            ResultPart1 = Part1(example ? ExampleInput : Input);
+            ResultPart1 = Part1(example ? ExampleInput.ToList() : Input.ToList());
             sw.Stop();
             TimeToExecutePart1 = sw.Elapsed;
             sw.Restart();
-            ResultPart2 = Part2(example ? ExampleInput : Input);
+            ResultPart2 = Part2(example ? ExampleInput.ToList() : Input.ToList());
             sw.Stop();
             TimeToExecutePart2 = sw.Elapsed;
             HasSolution = true;
@@ -69,7 +69,7 @@ namespace Advent
             Console.ForegroundColor = color;
         }
 
-        public abstract long Part1(IEnumerable<string> input);
-        public abstract long Part2(IEnumerable<string> input);
+        public abstract long Part1(List<string> input);
+        public abstract long Part2(List<string> input);
     }
 }

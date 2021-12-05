@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace Advent.y2021
 {
     public class Day02 : Day
@@ -13,7 +9,7 @@ namespace Advent.y2021
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             long hpos = 0;
             long vpos = 0;
@@ -25,7 +21,7 @@ namespace Advent.y2021
              
             return hpos * vpos;
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             long hpos = 0;
             long vpos = 0;

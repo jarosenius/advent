@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             var memory = new Dictionary<int, long>();
             var mask = "";
@@ -36,7 +36,7 @@ namespace Advent.y2020
             
             return memory.Values.Sum();
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var memory = new Dictionary<long, long>();
             var mask = "";

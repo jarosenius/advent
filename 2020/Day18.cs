@@ -14,12 +14,12 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             
             return input.Where(i => string.IsNullOrEmpty(i) == false).Select(i => long.Parse(Parse(i))).Aggregate(0L, (total, next) => total += next);
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             
 			return input.Where(i => string.IsNullOrEmpty(i) == false).Select(i => long.Parse(Parse2(i))).Aggregate(0L, (total, next) => total += next);

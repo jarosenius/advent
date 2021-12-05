@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             var rules = new List<Tuple<string, List<string>>>();
             foreach (var rawRule in input)
@@ -38,7 +38,7 @@ namespace Advent.y2020
             
             return GetNumberOfBagsThatFitColor("shiny gold", rules);
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var rules = new List<Tuple<string, List<string>>>();
             foreach (var rawRule in input)

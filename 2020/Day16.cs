@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             var limits = new Dictionary<string, (int Min, int Max)[]>();
             var limitsRaw = new List<string>();
@@ -30,7 +30,7 @@ namespace Advent.y2020
   
              return Part1(limits, neighbors, ticket);
         }
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var limits = new Dictionary<string, (int Min, int Max)[]>();
             var limitsRaw = new List<string>();

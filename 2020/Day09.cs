@@ -13,7 +13,7 @@ namespace Advent.y2020
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
              return Part1(input, 25);
         }
@@ -55,7 +55,7 @@ namespace Advent.y2020
             return valid;
         }
 
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var part1 = Part1(input, 25);
              return 

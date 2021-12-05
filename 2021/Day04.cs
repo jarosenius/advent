@@ -1,10 +1,5 @@
-﻿using System.Xml.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace Advent.y2021
 {
     public class Day04 : Day
@@ -14,13 +9,13 @@ namespace Advent.y2021
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             var bn = GetBoardsAndNumbers(input);
             return GetWinner(bn.Boards, bn.Numbers, false);
         }
 
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var bn = GetBoardsAndNumbers(input);
             return GetWinner(bn.Boards, bn.Numbers, true);

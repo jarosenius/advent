@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text;
-using Advent;
-
 namespace Advent.y2021
 {
     public class Day03 : Day
@@ -15,7 +11,7 @@ namespace Advent.y2021
             
         }
 
-        public override long Part1(IEnumerable<string> input)
+        public override long Part1(List<string> input)
         {
             StringBuilder sb = new();
 
@@ -32,7 +28,7 @@ namespace Advent.y2021
             return res;
         }
         
-        public override long Part2(IEnumerable<string> input)
+        public override long Part2(List<string> input)
         {
             var oxygen = GetData(input, r => r.Ones >= r.Zeroes);
             var co2 = GetData(input, r => r.Ones < r.Zeroes);
