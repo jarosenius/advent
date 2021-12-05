@@ -88,20 +88,10 @@ namespace Advent.y2021
 
                 if(End.Y < Start.Y)
                 {
-                    if(Start.X < End.X)
-                    {
-                        var x = maxX;
-                        return Enumerable.Range(minY, countY + 1).Select(y => new Coordinate(x--, y)).ToList();
-                    }
-                    else
-                    {
-                        var x = minX;
-                        return Enumerable.Range(minY, countY + 1).Select(y => new Coordinate(x++, y)).ToList();
-                    }
+                    return Enumerable.Range(minY, countY + 1).Select(y => new Coordinate(maxX--, y)).ToList();
                 }
 
-                var y = minY;
-                return Enumerable.Range(minX, countX + 1).Select(x => new Coordinate(x, y++)).ToList();    
+                return Enumerable.Range(minX, countX + 1).Select(x => new Coordinate(x, minY++)).ToList();    
             }
         }
         private class Coordinate
