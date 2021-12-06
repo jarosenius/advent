@@ -16,18 +16,12 @@ namespace Advent.y2021
 
         public override long Part1(List<string> input)
         {
-            var lanterns = input.First().SplitByAndParseToInt(",").Select(n => new Lanternfish(n, false)).ToList();
-
+            var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());    
             for (int i = 0; i < 80; i++)
             {
-                var newLanterns = lanterns.Count(l => l.Tick() == true);
-                for (int j = 0; j < newLanterns; j++)
-                {
-                    lanterns.Add(new Lanternfish());
-                }
+                lanterns = Tick(lanterns);
             }
-
-            return lanterns.Count();
+            return lanterns.Values.Sum();
         }
         public override long Part2(List<string> input)
         {
@@ -53,39 +47,6 @@ namespace Advent.y2021
                 [1] = lanterns.GetValueOrDefault(2),
                 [0] = lanterns.GetValueOrDefault(1),
             };
-        }
-
-        private class Lanternfish
-        {
-            public bool IsNew {get;set;} = false;
-            public int InternalTimer {get;set;}
-            public Lanternfish(int initialInternalTimer, bool isNew)
-            {
-                InternalTimer = initialInternalTimer;
-                IsNew = isNew;
-                if(isNew)
-                    InternalTimer+=2;
-            }
-            public Lanternfish() : this(6, true)
-            {
-
-            }
-
-            public bool Tick()
-            {
-                if(InternalTimer == 0)
-                {
-                    InternalTimer = 6;
-                    return true;
-                }
-                else if(InternalTimer <= 6)
-                {
-                    IsNew = false;
-                }
-
-                InternalTimer--;
-                return false;
-            }
         }
     }
 }
