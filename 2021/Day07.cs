@@ -16,22 +16,18 @@ namespace Advent.y2021
         {
             var numbers = input.First().SplitByAndParseToInt(",");
             return Enumerable.Range(0, numbers.Max())
-                .Select(x => 
-                    numbers.Aggregate(0, (res, n) => 
-                        res += Math.Abs(n - x)))
+                .Select(x => numbers.Sum(n => Math.Abs(n - x)))
                 .Min();
         }
         public override long Part2(List<string> input)
         {
             var numbers = input.First().SplitByAndParseToInt(",");
-            ConcurrentDictionary<int, int> stepCosts = new();
             return Enumerable.Range(0, numbers.Max())
-                .Select(x => 
-                    numbers.Aggregate(0, (res, n) => 
-                    {
-                        var steps = Math.Abs(n - x);
-                        return res + stepCosts.GetOrAdd(steps, s => Enumerable.Range(1, steps).Sum());
-                    }))
+                .Select(x => numbers.Sum(n => 
+                {
+                    var r = Math.Abs(n - x);
+                    return r * (r+1)/2;
+                }))
                 .Min();
         }
     }
