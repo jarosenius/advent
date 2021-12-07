@@ -17,13 +17,14 @@ namespace Advent.y2021
             var numbers = input.First().SplitByAndParseToInt(",");
             var max = numbers.Max();
             var min = numbers.Min();
-            return Enumerable.Range(0, max-min+1).Min(x => numbers.Sum(n => Math.Abs(n - x)));
+            return Enumerable.Range(min, max-min+1).Min(x => numbers.Sum(n => Math.Abs(n - x)));
         }
         public override long Part2(List<string> input)
         {
             var numbers = input.First().SplitByAndParseToInt(",");
-            return Enumerable.Range(0, numbers.Max())
-                .Min(x => numbers.Sum(n => 
+            var max = numbers.Max();
+            var min = numbers.Min();
+            return Enumerable.Range(min, max-min+1).Min(x => numbers.Sum(n => 
                 {
                     var s = Math.Abs(n - x);
                     return s * (s+1)/2;
