@@ -15,20 +15,19 @@ namespace Advent.y2021
         public override long Part1(List<string> input)
         {
             var numbers = input.First().SplitByAndParseToInt(",");
-            return Enumerable.Range(0, numbers.Max())
-                .Select(x => numbers.Sum(n => Math.Abs(n - x)))
-                .Min();
+            var max = numbers.Max();
+            var min = numbers.Min();
+            return Enumerable.Range(0, max-min+1).Min(x => numbers.Sum(n => Math.Abs(n - x)));
         }
         public override long Part2(List<string> input)
         {
             var numbers = input.First().SplitByAndParseToInt(",");
             return Enumerable.Range(0, numbers.Max())
-                .Select(x => numbers.Sum(n => 
+                .Min(x => numbers.Sum(n => 
                 {
-                    var r = Math.Abs(n - x);
-                    return r * (r+1)/2;
-                }))
-                .Min();
+                    var s = Math.Abs(n - x);
+                    return s * (s+1)/2;
+                }));
         }
     }
 }
