@@ -25,7 +25,7 @@ namespace Advent.y2021
             
             return rows.Sum(r =>
             {
-                var d = new string[10];
+                var d = new Dictionary<int, string>();
 
                 d[1] = r.pattern.First(p => p.Length == 2);
                 d[4] = r.pattern.First(p => p.Length == 4);
@@ -48,9 +48,7 @@ namespace Advent.y2021
                     && d[4].All(p.Contains)
                     && d[5].All(p.Contains));
 
-                var num = r.output.Select(o => d.ToList().IndexOf(d.First(i => i.All(o.Contains) && o.Length == i.Length)));
-                
-                return int.Parse(string.Join("", num));
+                return int.Parse(string.Join("", r.output.Select(o => d.First(i => i.Value.All(o.Contains) && o.Length == i.Value.Length).Key)));
             });
         }
 
