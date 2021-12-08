@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 namespace Advent.y2021
@@ -15,16 +16,44 @@ namespace Advent.y2021
             var parts = input.Select(x => x.Split("|"));
             var rows = parts.Select(p => (pattern: p[0].Split(' ', StringSplitOptions.RemoveEmptyEntries), output: p[1].Split(' ', StringSplitOptions.RemoveEmptyEntries))).ToList();
 
-             return rows.Sum(r => r.output
-                .Count(c => 
-                    c.Length == 2 || 
-                    c.Length == 3 ||
-                    c.Length == 4 ||
-                    c.Length == 7));
+             return rows.Sum(r => r.output.Count(c => c.Length is 7 or > 1 and < 5));
         }
         public override long Part2(List<string> input)
         {
-             return 0;
+            var parts = input.Select(x => x.Split("|"));
+            var rows = parts.Select(p => (pattern: p[0].Split(' ', StringSplitOptions.RemoveEmptyEntries), output: p[1].Split(' ', StringSplitOptions.RemoveEmptyEntries))).ToList();
+            
+            return rows.Sum(r =>
+            {
+                var d = new string[10];
+
+                d[1] = r.pattern.First(p => p.Length == 2);
+                d[4] = r.pattern.First(p => p.Length == 4);
+                d[5] = r.pattern.First(p => p.Length == 5 
+                    && d[4].Except(d[1]).All(p.Contains));
+                d[0] = r.pattern.First(p => p.Length == 6 
+                    && d[5].All(p.Contains) == false 
+                    && d[4].All(p.Contains) == false);
+                d[2] = r.pattern.First(p => p.Length == 5 
+                    && d[1].All(p.Contains) == false 
+                    && d[4].Except(d[1]).All(p.Contains) == false);
+                d[3] = r.pattern.First(p => p.Length == 5 
+                    && d[1].All(p.Contains));
+                d[6] = r.pattern.First(p => p.Length == 6 
+                    && d[5].All(p.Contains) 
+                    && d[4].All(p.Contains) == false);
+                d[7] = r.pattern.First(p => p.Length == 3);
+                d[8] = r.pattern.First(p => p.Length == 7);
+                d[9] = r.pattern.First(p => p.Length == 6
+                    && d[4].All(p.Contains)
+                    && d[5].All(p.Contains));
+
+                var num = r.output.Select(o => d.ToList().IndexOf(d.First(i => i.All(o.Contains) && o.Length == i.Length)));
+                
+                return int.Parse(string.Join("", num));
+            });
         }
+
+
     }
 }
