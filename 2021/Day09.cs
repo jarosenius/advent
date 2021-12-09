@@ -39,12 +39,9 @@ namespace Advent.y2021
         public override long Part2(List<string> input)
         {
             HashSet<(int X, int Y)> evaluated = new();
-            List<long> res = new();
-            
-            for (int i = 0; i < lows.Count; i++)
+            var res = lows.Select(low =>
             {
-                
-                var basin = new List<(int X, int Y)>{lows[i]};
+                var basin = new List<(int X, int Y)>{low};
                 var size = 0;
 
                 for (int j = 0; j < basin.Count; j++)
@@ -67,8 +64,9 @@ namespace Advent.y2021
                         basin.Add((x+1, y));
                 }
 
-                res.Add(size);
-            }
+                return size;
+            });
+
             return res.OrderByDescending(s => s).Take(3).Aggregate(1L, (s1, s2) => s1*s2);
         }
     }
