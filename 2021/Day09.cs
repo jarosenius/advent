@@ -51,7 +51,6 @@ namespace Advent.y2021
                 {
                     var (x, y) = basin[j];
                     var current = heatmap[y][x];
-                    var key = $"{x},{y}";
                     if(evaluated.Contains((x, y)))
                         continue;
                     if(heatmap[y][x] == 9)
