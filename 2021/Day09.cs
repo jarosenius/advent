@@ -38,7 +38,7 @@ namespace Advent.y2021
         }
         public override long Part2(List<string> input)
         {
-            List<string> evaluated = new();
+            HashSet<(int X, int Y)> evaluated = new();
             List<long> res = new();
             
             for (int i = 0; i < lows.Count; i++)
@@ -52,11 +52,11 @@ namespace Advent.y2021
                     var (x, y) = basin[j];
                     var current = heatmap[y][x];
                     var key = $"{x},{y}";
-                    if(evaluated.Contains(key))
+                    if(evaluated.Contains((x, y)))
                         continue;
                     if(heatmap[y][x] == 9)
                         continue;
-                    evaluated.Add(key);
+                    evaluated.Add((x, y));
                     size++;
                     if(y > 0 && heatmap[y-1][x] > current)
                         basin.Add((x, y-1));
