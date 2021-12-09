@@ -39,9 +39,9 @@ namespace Advent.y2021
         public override long Part2(List<string> input)
         {
             HashSet<(int X, int Y)> evaluated = new();
-            var res = lows.Select(low =>
+            int GetSizeOfBasin((int X, int Y) c)
             {
-                var basin = new List<(int X, int Y)>{low};
+                var basin = new List<(int X, int Y)>{c};
                 var size = 0;
 
                 for (int j = 0; j < basin.Count; j++)
@@ -65,8 +65,9 @@ namespace Advent.y2021
                 }
 
                 return size;
-            });
+            }
 
+            var res = lows.Select(low => GetSizeOfBasin(low));
             return res.OrderByDescending(s => s).Take(3).Aggregate(1L, (s1, s2) => s1*s2);
         }
     }
