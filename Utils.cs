@@ -41,6 +41,14 @@ namespace Advent
             return lines.Select(n => int.Parse(n));
         }
 
+        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        {
+            foreach(T item in enumeration)
+            {
+                action(item);
+            }
+        }
+
         public static int[][] SplitByFirstThenBySecondAndParseToInt(this string line, string splitFirst, string splitSecond)
         {
             return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries).Select(p => p.SplitByAndParseToInt(splitSecond)).ToArray();
