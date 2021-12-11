@@ -68,5 +68,37 @@ namespace Advent
             }
             return grid;
         }
+
+        public static IEnumerable<T> GetNeighbors<T>(this IEnumerable<IEnumerable<T>> a, int xPos, int yPos, bool includeDiagonals)
+        {
+            var neighbors = new List<T>()
+            {
+                a.ElementAt(xPos, yPos-1),
+                a.ElementAt(xPos+1, yPos),
+                a.ElementAt(xPos, yPos+1),
+                a.ElementAt(xPos-1, yPos),
+            };
+            if(includeDiagonals)
+            {
+                neighbors.Add(a.ElementAt(xPos-1, yPos-1));
+                neighbors.Add(a.ElementAt(xPos+1, yPos-1));
+                neighbors.Add(a.ElementAt(xPos+1, yPos+1));
+                neighbors.Add(a.ElementAt(xPos-1, yPos+1));
+            }
+            
+
+            return neighbors.Where(n => n != null);
+        }
+
+        public static T ElementAt<T>(this IEnumerable<IEnumerable<T>> a, int xPos, int yPos)
+        {
+            var minY = 0;
+            var maxY = a.Count();
+            var minX = 0;
+            var maxX = a.ElementAt(0).Count();
+            if(xPos < minX || xPos >= maxX || yPos < minY || yPos >= maxY)
+                return default(T);
+            return a.ElementAt(yPos).ElementAt(xPos);
+        }
     }
 }
