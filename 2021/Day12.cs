@@ -82,7 +82,9 @@ namespace Advent.y2021
                 if(CanVisit(visits, visitTwice) == false)
                     return 0;
 
-                visits.Add(Name);
+                if(!IsEnd || !IsLarge || !IsStart)
+                    visits.Add(Name);
+
                 return ConnectedCaves.Where(c => 
                             !c.IsStart 
                             && (c.IsLarge || (c.CanVisit(visits, visitTwice))))
