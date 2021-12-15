@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Advent.y2021
@@ -26,8 +27,8 @@ namespace Advent.y2021
 
         private List<(int X, int Y)> FindAStarPath(Dictionary<(int X, int Y), int> map, (int X, int Y) start, (int X, int Y) goal)
         {
-            Queue<(int X, int Y)> pathsToEvaluate = new();
-            Dictionary<(int X, int Y), long> score = new();
+            PriorityQueue<(int X, int Y), int> pathsToEvaluate = new();
+            Dictionary<(int X, int Y), int> score = new();
             Dictionary<(int X, int Y), (int X, int Y)> path = new();
             score[start] = 0;
             var maxX = map.Keys.Max(p => p.X);
@@ -40,14 +41,15 @@ namespace Advent.y2021
                 GetNeighbors(pos, maxX, maxY).ForEach(neighbor =>
                 {
                     var neighborScore = score[pos] + map.GetValueOrDefault(neighbor, 10000);
-                    if(map.ContainsKey(neighbor) && neighborScore < score.GetValueOrDefault(neighbor, int.MaxValue))
+                    if(neighborScore < score.GetValueOrDefault(neighbor, int.MaxValue))
                     {
                         path[neighbor] = pos;
                         score[neighbor] = neighborScore;
-                        pathsToEvaluate.Enqueue(neighbor);
+                        var distanceFromGoal = (Math.Abs(goal.X - maxX) - Math.Abs(goal.Y - maxY));
+                        pathsToEvaluate.Enqueue(neighbor, neighborScore + distanceFromGoal);
                     }
                 });
-            } while (pathsToEvaluate.TryDequeue(out pos));
+            } while (pathsToEvaluate.TryDequeue(out pos, out _));
             return new List<(int X, int Y)>();
         }
 
