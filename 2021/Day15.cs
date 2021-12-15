@@ -70,15 +70,14 @@ namespace Advent.y2021
 
         private List<(int X, int Y)> WalkPathBackwards(Dictionary<(int X, int Y), (int X, int Y)> path, (int X, int Y) pos)
         {
-            List<(int X, int Y)> res = new();
-            res.Add(pos);
+            Stack<(int X, int Y)> res = new();
+            res.Push(pos);
             while(path.ContainsKey(pos))
             {
                 pos = path[pos];
-                res.Add(pos);
+                res.Push(pos);
             }
-            res.Reverse();
-            return res;
+            return res.ToList();
         }
         
         private Dictionary<(int X, int Y), int> GrowMap(Dictionary<(int X, int Y), int> map)
