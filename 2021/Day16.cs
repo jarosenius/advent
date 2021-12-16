@@ -12,7 +12,7 @@ namespace Advent.y2021
 
         public override long Part1(List<string> input)
         {
-            var binString = string.Join("", input.First().Select(c => GetBinary(c)));
+            var binString = string.Join("", input.First().Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
             return DecodePacket(binString).Packet.VersionSum;
         }
 
@@ -20,7 +20,8 @@ namespace Advent.y2021
 
         public override long Part2(List<string> input)
         {
-            return 0;
+            var binString = string.Join("", input.First().Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
+            return DecodePacket(binString).Packet.Solve();
         }
         private (Packet Packet, int Offset) DecodePacket(string packet)
         {
@@ -39,7 +40,7 @@ namespace Advent.y2021
                     nums.Add(current[1..]);
                     i+=5;
                 } while (current[0] != '0');
-                var num = Utils.ConvertFromBinaryString(string.Join("",nums)).ToString();
+                var num = Utils.ConvertFromBinaryString(string.Join("",nums));
                 return (new Packet(version, type, num, new()), i);
             }
             else // Packet contains operator
@@ -70,50 +71,35 @@ namespace Advent.y2021
                 }
             }
 
-            return (new Packet(version, type, "X", res), i);
+            return (new Packet(version, type, 0, res), i);
         }
-        private record Packet(int Version, int IType, string Value, List<Packet> subExpr)
+        private record Packet(int Version, int IType, long Value, List<Packet> subExpr)
         {
             public long VersionSum => Version + subExpr.Sum(s => s.VersionSum);
-        }
-        private string GetBinary(char c)
-        {
-            switch (c)
+
+            public long Solve()
             {
-                case '0':
-                    return "0000";
-                case '1':
-                    return "0001";
-                case '2':
-                    return "0010";
-                case '3':
-                    return "0011";
-                case '4':
-                    return "0100";
-                case '5':
-                    return "0101";
-                case '6':
-                    return "0110";
-                case '7':
-                    return "0111";
-                case '8':
-                    return "1000";
-                case '9':
-                    return "1001";
-                case 'A':
-                    return "1010";
-                case 'B':
-                    return "1011";
-                case 'C':
-                    return "1100";  
-                case 'D':
-                    return "1101";
-                case 'E':
-                    return "1110";
-                case 'F':
-                    return "1111";
-                default:
-                    return null;
+                switch (IType)
+                {
+                    case 0:
+                        return subExpr.Sum(s => s.Solve());
+                    case 1:
+                        return subExpr.Aggregate(1L, (r, packet) => r * packet.Solve());
+                    case 2:
+                        return subExpr.Min(s => s.Solve());
+                    case 3:
+                        return subExpr.Max(s => s.Solve());
+                    case 4:
+                        return Value;
+                    case 5:
+                        return subExpr[0].Solve() > subExpr[1].Solve() ? 1 : 0;
+                    case 6:
+                        return subExpr[0].Solve() < subExpr[1].Solve() ? 1 : 0;
+                    case 7:
+                        return subExpr[0].Solve() == subExpr[1].Solve() ? 1 : 0;
+                    default:
+                        throw new Exception();
+                }
             }
         }
     }
