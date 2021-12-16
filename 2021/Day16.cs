@@ -16,8 +16,6 @@ namespace Advent.y2021
             return DecodePacket(binString).Packet.VersionSum;
         }
 
-
-
         public override long Part2(List<string> input)
         {
             var binString = string.Join("", input.First().Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
@@ -26,8 +24,8 @@ namespace Advent.y2021
         private (Packet Packet, int Offset) DecodePacket(string packet)
         {
             List<Packet> res = new();
-            var version = (int)Utils.ConvertFromBinaryString(packet[..3].PadLeft(4,'0'));            
-            var type = (int)Utils.ConvertFromBinaryString(packet[3..6].PadLeft(4,'0'));     
+            var version = (int)Utils.ConvertFromBinaryString(packet[..3]);            
+            var type = (int)Utils.ConvertFromBinaryString(packet[3..6]);     
             
             var i = 6;
             if(type == 4) // Packnet contains number
@@ -36,9 +34,8 @@ namespace Advent.y2021
                 List<string> nums = new();
                 do
                 {
-                    current = packet.Substring(i, 5);
+                    current = packet[i..(i+=5)];
                     nums.Add(current[1..]);
-                    i+=5;
                 } while (current[0] != '0');
                 var num = Utils.ConvertFromBinaryString(string.Join("",nums));
                 return (new Packet(version, type, num, new()), i);
@@ -46,10 +43,9 @@ namespace Advent.y2021
             else // Packet contains operator
             {
                 var lengthTypeId = packet[i++];
-                if(lengthTypeId == '0') // The next 15 bits are a number that represents the total length in bits of the sub-packets contained by this packet.
+                if(lengthTypeId == '0')
                 {
-                    var length = (int)Utils.ConvertFromBinaryString(packet.Substring(i, 15));
-                    i+=15;
+                    var length = (int)Utils.ConvertFromBinaryString(packet[i..(i+=15)]);
                     while(length > 0)
                     {
                         var (p, ii) = DecodePacket(packet[i..(i+length)]);
@@ -60,8 +56,7 @@ namespace Advent.y2021
                 }
                 else
                 {
-                    var packets = Utils.ConvertFromBinaryString(packet.Substring(i, 11));
-                    i+=11;
+                    var packets = Utils.ConvertFromBinaryString(packet[i..(i+=11)]);
                     for (int j = 0; j < packets; j++)
                     {
                         var (p, ii) = DecodePacket(packet[i..]);
