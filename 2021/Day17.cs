@@ -19,29 +19,36 @@ namespace Advent.y2021
             var iPos = match.SelectMany(m => m.Groups.Values.Skip(1).Select(g => int.Parse(g.Value))).ToArray();
             var area = new Pos(iPos[0], iPos[1], iPos[2], iPos[3]);
 
-            return GetHighestPoint(area);
+            return GetHighestAndDistinctVelocities(area).Highest;
         }
 
         public override long Part2(List<string> input)
         {
-            return 0;
+			var reg = new Regex(@"[xy]=(-?\d+)..(-?\d+)", RegexOptions.Compiled);
+            var match = reg.Matches(input[0]);
+            var iPos = match.SelectMany(m => m.Groups.Values.Skip(1).Select(g => int.Parse(g.Value))).ToArray();
+            var area = new Pos(iPos[0], iPos[1], iPos[2], iPos[3]);
+
+            return GetHighestAndDistinctVelocities(area).DistinctVelocities;
         }
 
-        private long GetHighestPoint(Pos area)
+        private (long Highest, long DistinctVelocities) GetHighestAndDistinctVelocities(Pos area)
         {
             var highest = 0L; 
+            HashSet<(int x, int y)> hitsByVelocity = new();
             Enumerable.Range(area.yMin, (2*Math.Abs(area.yMax)) - area.yMin).ForEach(y => {
                 Enumerable.Range(0, Math.Abs(area.xMax)*2).ForEach(x =>
                 {
                     var t = CalculateTrajectory(area, x, y);
                     if(t.InArea)
                     {
+                        hitsByVelocity.Add((x, y));
                         if(t.Highest > highest)
                             highest = t.Highest;
                     }
                 });
             });      
-            return highest;
+            return (highest, hitsByVelocity.Count());
         }
 
         private Trajectory CalculateTrajectory(Pos area, int vx, int vy)
