@@ -16,7 +16,6 @@ namespace Advent.y2021
         {
             var json = input.Select(s => JsonConvert.DeserializeObject<JArray>(s)).Select(j => SnailNum.Create(j)).ToArray();
             var a = json.Skip(1).Aggregate(json[0], (r, s) => r+s);
-            Console.WriteLine(a);
             return a.Magnitude;
         }
         public override long Part2(List<string> input)
@@ -26,6 +25,8 @@ namespace Advent.y2021
             {
                 for (int j = 0; j < input.Count; j++)
                 {
+                    if(i == j)
+                        continue;
                     var sum = SnailNum.Create(JsonConvert.DeserializeObject<JArray>(input[i])) + SnailNum.Create(JsonConvert.DeserializeObject<JArray>(input[j]));
                     if(sum.Magnitude > best)
                         best = sum.Magnitude;
