@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Advent.y2021
@@ -76,9 +75,8 @@ namespace Advent.y2021
                     for (int x = minX-1; x <= maxX+1; x++)
                     {  
                         var positions = Offsets.Select(o => (o.X + x, o.Y + y)).ToList();
-                        var bin = new string(positions.Select(pos => IsEnabled(pos) ? '1' : '0').ToArray());
-                        var bin2num = Convert.ToInt32(bin, 2);      
-                        if(enhancement[bin2num])
+                        var num = Convert.ToInt32(new string(positions.Select(pos => IsEnabled(pos) ? '1' : '0').ToArray()), 2);      
+                        if(enhancement[num])
                             res.Add((x, y));
                     }
                 }
@@ -86,7 +84,7 @@ namespace Advent.y2021
             });
             return image.Count();
         }
-        
+
         private void PrintImage(HashSet<(int X, int Y)> image)
         {
             var rowWidth = image.Max(k => k.X) - image.Min(k => k.X)+1;
