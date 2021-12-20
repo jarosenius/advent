@@ -24,17 +24,15 @@ namespace Advent.y2021
         }
         public override long Part1(List<string> input)
         {
-            var enhancement = input[0].Select(c => c == '#').ToArray();
-            var image = input.Skip(2)
-                .SelectMany((r, y) => r
-                .Select((c, x) => (X: x, Y: y, C: c)))
-                .Where(e => e.C == '#')
-                .Select(e => (e.X, e.Y))
-                .ToHashSet<(int X, int Y)>();
-            return Run(2, image, enhancement);
+            return Run(2, input);
         }
         public override long Part2(List<string> input)
         {
+            return Run(50, input);
+        }
+
+        private long Run(int times, List<string> input)
+        {
             var enhancement = input[0].Select(c => c == '#').ToArray();
             var image = input.Skip(2)
                 .SelectMany((r, y) => r
@@ -42,11 +40,7 @@ namespace Advent.y2021
                 .Where(e => e.C == '#')
                 .Select(e => (e.X, e.Y))
                 .ToHashSet<(int X, int Y)>();
-            return Run(50, image, enhancement);
-        }
 
-        private long Run(int times, HashSet<(int X, int Y)> image, bool[] enhancement)
-        {
             Enumerable.Range(0, times).ForEach(i => image = Enhance(image, enhancement, i));
             return image.Count();
         }
