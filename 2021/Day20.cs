@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Drawing;
+
 namespace Advent.y2021
 {
     public class Day20 : Day
@@ -24,16 +24,14 @@ namespace Advent.y2021
         }
         public override long Part1(List<string> input)
         {
-            var image = Run(2, input);
-            return image.Count();
+            return Run(2, input);
         }
         public override long Part2(List<string> input)
         {
-            var image = Run(50, input);
-            return image.Count();
+            return Run(50, input);
         }
 
-        private HashSet<(int X, int Y)> Run(int times, List<string> input)
+        private long Run(int times, List<string> input)
         {
             var enhancement = input[0].Select(c => c == '#').ToArray();
             var image = input.Skip(2)
@@ -42,13 +40,9 @@ namespace Advent.y2021
                 .Where(e => e.C == '#')
                 .Select(e => (e.X, e.Y))
                 .ToHashSet<(int X, int Y)>();
-            //DrawImage(image, -1, times);
-            Enumerable.Range(0, times).ForEach(i => 
-            {
-                image = Enhance(image, enhancement, i);
-                //DrawImage(image, i, times);
-            });
-            return image;
+
+            Enumerable.Range(0, times).ForEach(i => image = Enhance(image, enhancement, i));
+            return image.Count();
         }
 
         private HashSet<(int X, int Y)> Enhance(HashSet<(int X, int Y)> image, bool[] enhancement, int i)
@@ -100,39 +94,6 @@ namespace Advent.y2021
                 }
             }
             Console.WriteLine("-------------");
-        }
-
-        private void DrawImage(HashSet<(int X, int Y)> image, int iter, int max)
-        {
-            if(OperatingSystem.IsWindows() == false)
-                return;
-
-            var i = iter+1;
-            var scale = 5;
-            var totalWidth = (100 + (2*i)) * scale; 
-            int width = 201 * scale;
-            int height = 201 * scale;
-            var name = $"iter_{i}_of_{max}";
-            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics graphics = Graphics.FromImage(bitmap);
-            graphics.FillRectangle(new SolidBrush(Color.White), 0,0, width, height);
-            var xOff = 0-image.Min(k => k.X);
-            var yOff = 0-image.Min(k => k.Y);
-            var cpy = image.Select(p => (X: (xOff > 0 ? p.X+xOff : p.X), Y: (yOff > 0 ? p.Y+yOff : p.Y))).ToHashSet();
-            var offset = ((width-totalWidth)/2);
-            for (var y = 0; y <= cpy.Max(p => p.Y); y++)
-            {
-                for (var x = 0; x <= cpy.Max(p => p.X); x++)
-                {
-                    if(cpy.Contains((x, y)))
-                    {
-                        var tpos = (X:(x*scale)+offset, Y:(y*scale)+offset);
-                        graphics.FillRectangle(new SolidBrush(Color.Black), tpos.X, tpos.Y, scale, scale);
-                    }
-
-                }
-            }
-            bitmap.Save($"./day20result/{name}.png", System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }
