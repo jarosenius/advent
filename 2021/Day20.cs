@@ -47,42 +47,40 @@ namespace Advent.y2021
 
         private long Run(int times, HashSet<(int X, int Y)> image, bool[] enhancement)
         {
-            Enumerable.Range(0, times).ForEach(i => 
-            {
-                var minX = image.Min(e => e.X);
-                var minY = image.Min(e => e.Y);
-                var maxX = image.Max(e => e.X);
-                var maxY = image.Max(e => e.Y);
+            Enumerable.Range(0, times).ForEach(i => image = Enhance(image, enhancement, i));
+            return image.Count();
+        }
 
+        private HashSet<(int X, int Y)> Enhance(HashSet<(int X, int Y)> image, bool[] enhancement, int i)
+        {
+            var min = (X: image.Min(e => e.X), Y: image.Min(e => e.Y));
+            var max = (X: image.Max(e => e.X), Y: image.Max(e => e.Y));
+
+            void AddIfEnabled((int X, int Y) pos, bool[] enhancement, HashSet<(int X, int Y)> set)
+            {
                 bool IsEnabled((int X, int Y) pos)
                 {
                     if(i % 2 == 0)
                         return image.Contains(pos);
-                    
-                    var inCurrent = pos.X >= minX && pos.X <= maxX && pos.Y >= minY && pos.Y <= maxY;
-                    if(inCurrent || enhancement[0] == false)
-                    {
+                    if(enhancement[0] == false || (pos.X >= min.X && pos.X <= max.X && pos.Y >= min.Y && pos.Y <= max.Y))
                         return image.Contains(pos);
-                    }
-
                     return true;
                 }
 
-                HashSet<(int X, int Y)> res = new();
+                var positions = Offsets.Select(o => (o.X + pos.X, o.Y + pos.Y)).ToList();
+                var num = Convert.ToInt32(new string(positions.Select(p => IsEnabled(p) ? '1' : '0').ToArray()), 2);      
+                if(enhancement[num])
+                    set.Add(pos);
+            }
 
-                for (int y = minY-1; y <= maxY+1; y++)
-                {
-                    for (int x = minX-1; x <= maxX+1; x++)
-                    {  
-                        var positions = Offsets.Select(o => (o.X + x, o.Y + y)).ToList();
-                        var num = Convert.ToInt32(new string(positions.Select(pos => IsEnabled(pos) ? '1' : '0').ToArray()), 2);      
-                        if(enhancement[num])
-                            res.Add((x, y));
-                    }
-                }
-                image = res;
-            });
-            return image.Count();
+            var xCount = (max.X - min.X)+3;
+            var yCount = (max.Y - min.Y)+3;
+            HashSet<(int X, int Y)> res = new();
+
+            Enumerable.Range(min.Y-1, yCount).SelectMany(y => 
+                Enumerable.Range(min.X-1, xCount).Select(x => (x, y)))
+            .ForEach(p => AddIfEnabled(p, enhancement, res));
+            return res;
         }
 
         private void PrintImage(HashSet<(int X, int Y)> image)
