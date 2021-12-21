@@ -79,13 +79,15 @@ namespace Advent.y2021
 
                 round.IsPlayerOne = !round.IsPlayerOne;
 
-                var outcome = outcomes.Select(o => DiracTurn((round.P1pos, round.P2pos, round.P1score, round.P2score, o, round.IsPlayerOne))).ToArray();
-                var (p1wins, p2wins) = outcome.Aggregate((0L, 0L), (a, c) => (a.Item1+c.P1Wins, a.Item2+c.P2Wins));
+                var (p1wins, p2wins) = outcomes
+                    .Select(o => DiracTurn((round.P1pos, round.P2pos, round.P1score, round.P2score, o, round.IsPlayerOne)))
+                    .Aggregate((0L, 0L), (a, c) => (a.Item1+c.P1Wins, a.Item2+c.P2Wins));
                 return results[current] = (p1wins, p2wins);
             }       
             
-            var outcome = outcomes.Select(t => DiracTurn((p1pos, p2pos, 0, 0, t, true))).ToArray();
-            var (p1wins, p2wins) = outcome.Aggregate((0L, 0L), (a, c) => (a.Item1+c.P1Wins, a.Item2+c.P2Wins));
+            var (p1wins, p2wins) = outcomes
+                .Select(t => DiracTurn((p1pos, p2pos, 0, 0, t, true)))
+                .Aggregate((0L, 0L), (a, c) => (a.Item1+c.P1Wins, a.Item2+c.P2Wins));
             return p1wins > p2wins ? p1wins : p2wins;
         }
     }
