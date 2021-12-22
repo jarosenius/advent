@@ -34,7 +34,7 @@ namespace Advent.y2021
                 List<Cuboid> tmpState = new();
                 if(i.On)
                     tmpState.Add(i.Cuboid);      
-                state.ForEach(s => tmpState.AddRange(s.RemoveIntersectingParts(i.Cuboid)));
+                state.ForEach(s => tmpState.AddRange(s.SymetricDifference(i.Cuboid)));
                 state = tmpState;
             });
 
@@ -55,7 +55,7 @@ namespace Advent.y2021
                 var zr = new Range(Math.Max(Z.From, c.Z.From), Math.Min(Z.To, c.Z.To));
                 return new Cuboid(xr, yr, zr);
             }
-            public List<Cuboid> RemoveIntersectingParts(Cuboid c)
+            public List<Cuboid> SymetricDifference(Cuboid c)
             {
                 var intersection = Intersection(c);
                 if(!intersection.Valid)
