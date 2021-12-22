@@ -13,29 +13,14 @@ namespace Advent.y2021
 
         public override long Part1(List<string> input)
         {
-            var instructions = input.Select(r => r.Split(new[]{',', ' '},StringSplitOptions.RemoveEmptyEntries)).Select(i => {
-                var x = i[1][2..].Split("..").Select(int.Parse).ToArray();
-                var y = i[2][2..].Split("..").Select(int.Parse).ToArray();
-                var z = i[3][2..].Split("..").Select(int.Parse).ToArray();
-                return new Instruction(i[0] == "on", new Cuboid(new Range(x[0], x[1]), new Range(y[0], y[1]), new Range(z[0], z[1])));
-            }).ToArray();
-            HashSet<(int X, int Y, int Z)> state = new();
-            instructions.Where(i => i.RangesWithinLimit(50)).ForEach(i =>{
-                var ranges = 
-                    Enumerable.Range((int)i.Cuboid.X.From, (int)i.Cuboid.X.Count)
-                    .SelectMany(x => Enumerable.Range((int)i.Cuboid.Y.From, (int)i.Cuboid.Y.Count)
-                    .SelectMany(y => Enumerable.Range((int)i.Cuboid.Z.From, (int)i.Cuboid.Z.Count)
-                    .Select(z => (X: x, Y: y, Z: z))))
-                    .ToHashSet();
-
-                if(i.On)
-                    ranges.ForEach(c => state.Add(c));
-                else
-                    ranges.ForEach(c => state.Remove(c));
-            });
-            return state.Count();
+            return RebootReactor(input, true, 50).Sum(s => s.X.Count * s.Y.Count * s.Z.Count);
         }
         public override long Part2(List<string> input)
+        {
+            return RebootReactor(input).Sum(s => s.X.Count * s.Y.Count * s.Z.Count);
+        }
+
+        private List<Cuboid> RebootReactor(List<string> input, bool limit = false, int lim = 50)
         {
             var instructions = input.Select(r => r.Split(new[]{',', ' '},StringSplitOptions.RemoveEmptyEntries)).Select(i => {
                 var x = i[1][2..].Split("..").Select(int.Parse).ToArray();
@@ -44,7 +29,8 @@ namespace Advent.y2021
                 return new Instruction(i[0] == "on", new Cuboid(new Range(x[0], x[1]), new Range(y[0], y[1]), new Range(z[0], z[1])));
             }).ToArray();
             List<Cuboid> state = new();
-            instructions.ForEach(i =>{
+            var instr = limit ? instructions.Where(i => i.RangesWithinLimit(lim)) : instructions;
+            instr.ForEach(i =>{
                 List<Cuboid> tmpState = new();
                 if(i.On)
                     tmpState.Add(i.Cuboid);      
@@ -52,7 +38,7 @@ namespace Advent.y2021
                 state = tmpState;
             });
 
-            return state.Sum(s => s.X.Count * s.Y.Count * s.Z.Count);
+            return state;
         }
 
         private record Range(long From, long To)
