@@ -13,14 +13,14 @@ namespace Advent.y2021
 
         public override long Part1(List<string> input)
         {
-            return RebootReactor(input, true, 50).Sum(s => s.X.Count * s.Y.Count * s.Z.Count);
+            return RebootReactor(input, true, 50);
         }
         public override long Part2(List<string> input)
         {
-            return RebootReactor(input).Sum(s => s.X.Count * s.Y.Count * s.Z.Count);
+            return RebootReactor(input);
         }
 
-        private List<Cuboid> RebootReactor(List<string> input, bool limit = false, int lim = 50)
+        private long RebootReactor(List<string> input, bool limit = false, int lim = 50)
         {
             var instructions = input.Select(r => r.Split(new[]{',', ' '},StringSplitOptions.RemoveEmptyEntries)).Select(i => {
                 var x = i[1][2..].Split("..").Select(int.Parse).ToArray();
@@ -38,7 +38,7 @@ namespace Advent.y2021
                 state = tmpState;
             });
 
-            return state;
+            return state.Sum(s => s.X.Count * s.Y.Count * s.Z.Count);
         }
 
         private record Range(long From, long To)
