@@ -80,7 +80,7 @@ namespace Advent.y2021
                     return 1;
 
                 if(CanVisit(visits, visitTwice) == false)
-                    return 0;
+                   return 0;
 
                 if(!IsEnd || !IsLarge || !IsStart)
                     visits.Add(Name);

@@ -86,9 +86,9 @@ namespace Advent.y2020
             switch (color)
             {
                 case "dotted black":
-                    return 0;
+                   return 0;
                 case "faded blue":
-                    return 0;
+                   return 0;
                 case "light red":
                     return GetBagsInBagWithColor("bright white") + 2 * GetBagsInBagWithColor("muted yellow");
                 case "dark orange":

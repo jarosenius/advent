@@ -20,7 +20,7 @@ namespace Advent.y2021
             {
                 var (end, s) = GetUntilErrorOrComplete(line);
                 if(line.Length == end)
-                    return 0;
+                   return 0;
                 return s.Count > 0 ? cost[line.Skip(end).FirstOrDefault()] : 0;
             }).Sum();
         }
