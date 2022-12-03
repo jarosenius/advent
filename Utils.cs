@@ -100,5 +100,22 @@ namespace Advent
                 return default(T);
             return a.ElementAt(yPos).ElementAt(xPos);
         }
+
+        public static IEnumerable<IEnumerable<T>> GroupWhile<T>(this IEnumerable<T> source, Func<T, bool> condition )
+        {
+            var list = new List<T> { source.First() };
+            foreach (T item in source.Skip(1))
+            {
+                if (condition(item) == false)
+                {
+                    yield return list;
+                    list = new List<T>();
+                    continue;
+                }
+
+                list.Add(item);
+            }
+            yield return list;
+        }
     }
 }
