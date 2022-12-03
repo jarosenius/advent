@@ -27,15 +27,6 @@ namespace Advent.y2022
                 {"ZC", 3+3},
             };
 
-            // var sum = 0;
-            // foreach(var row in input) 
-            // {
-            //     var move = $"{row[2]}{row[0]}";
-            //     sum += scores[move];
-            // }
-
-            // var summa = (from row in input select scores[$"{row[2]}{row[0]}"]).Sum();
-
             return input.Sum(row => scores[$"{row[2..]}{row[..1]}"]);
         }
         public override long Part2(List<string> input)
