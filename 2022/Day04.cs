@@ -12,24 +12,34 @@ namespace Advent.y2022
 
         public override long Part1(List<string> input)
         {
-            var sections = input
-                .Select(row => row.Split(',')
-                    .Select(s => s.Split('-')
-                    .Select(int.Parse))
-                    .Select(s => new Section(s.First(), s.Last())));
-
-            return sections.Count(sec => 
+            return GetSections(input).Count(sec => 
             {
-                var f = sec.First();
-                var t = sec.Last();
+                var r1 = sec.First();
+                var r2 = sec.Last();
 
-                return f.From <= t.From && t.To <= f.To || 
-                        t.From <= f.From && f.To <= t.To;
+                return r1.From <= r2.From && r2.To <= r1.To || 
+                        r2.From <= r1.From && r1.To <= r2.To;
             });
         }
         public override long Part2(List<string> input)
         {
-            return 0;
+            return GetSections(input).Count(sec => 
+            {
+                var r1 = sec.First();
+                var r2 = sec.Last();
+
+                return r1.To >= r2.From && r1.From <= r2.To || 
+                        r2.To >= r1.From && r2.From <= r1.To;
+            });
+        }
+
+        private IEnumerable<IEnumerable<Section>> GetSections(IEnumerable<string> input) 
+        {
+           return input
+                .Select(row => row.Split(',')
+                    .Select(s => s.Split('-')
+                    .Select(int.Parse))
+                    .Select(s => new Section(s.First(), s.Last())));
         }
 
         record Section(int From, int To);
