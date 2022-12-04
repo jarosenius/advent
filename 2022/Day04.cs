@@ -14,22 +14,22 @@ namespace Advent.y2022
         {
             return GetSections(input).Count(sec => 
             {
-                var r1 = sec.First();
-                var r2 = sec.Last();
+                var f = sec.First();
+                var t = sec.Last();
 
-                return r1.From <= r2.From && r2.To <= r1.To || 
-                        r2.From <= r1.From && r1.To <= r2.To;
+                return f.From <= t.From && t.To <= f.To || 
+                        t.From <= f.From && f.To <= t.To;
             });
         }
         public override long Part2(List<string> input)
         {
             return GetSections(input).Count(sec => 
             {
-                var r1 = sec.First();
-                var r2 = sec.Last();
+                var f = sec.First();
+                var t = sec.Last();
 
-                return r1.To >= r2.From && r1.From <= r2.To || 
-                        r2.To >= r1.From && r2.From <= r1.To;
+                return f.To >= t.From && f.From <= t.To || 
+                        t.To >= f.From && t.From <= f.To;
             });
         }
 
