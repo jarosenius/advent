@@ -5,11 +5,12 @@ using System.Linq;
 using MoreLinq;
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day09 : Day
     {
         public Day09() : base(9, 2021)
         {
-            
+
         }
         private int[][] heatmap;
         private List<(int X, int Y)> lows = new();
@@ -22,53 +23,53 @@ namespace Advent.y2021
                 for (int x = 0; x < heatmap[y].Length; x++)
                 {
                     var comparisons = new int[4];
-                    comparisons[0] =  y == 0 ? 9 : heatmap[y-1][x]; // above
-                    comparisons[1] = x == heatmap[y].Length-1 ? 9 : heatmap[y][x+1]; // right
-                    comparisons[2] = y == heatmap.Length-1 ? 9 : heatmap[y+1][x]; // below
-                    comparisons[3] = x == 0 ? 9 : heatmap[y][x-1]; // left
-                    if(comparisons.All(i => heatmap[y][x] < i))
+                    comparisons[0] = y == 0 ? 9 : heatmap[y - 1][x]; // above
+                    comparisons[1] = x == heatmap[y].Length - 1 ? 9 : heatmap[y][x + 1]; // right
+                    comparisons[2] = y == heatmap.Length - 1 ? 9 : heatmap[y + 1][x]; // below
+                    comparisons[3] = x == 0 ? 9 : heatmap[y][x - 1]; // left
+                    if (comparisons.All(i => heatmap[y][x] < i))
                     {
-                        sum += heatmap[y][x]+1;
+                        sum += heatmap[y][x] + 1;
                         lows.Add((x, y));
                     }
                 }
-                
+
             }
-             return sum;
+            return sum;
         }
         public override long Part2(List<string> input)
         {
             HashSet<(int X, int Y)> evaluated = new();
             int GetSizeOfBasin((int X, int Y) c)
             {
-                var basin = new List<(int X, int Y)>{c};
+                var basin = new List<(int X, int Y)> { c };
                 var size = 0;
 
                 for (int j = 0; j < basin.Count; j++)
                 {
                     var (x, y) = basin[j];
                     var current = heatmap[y][x];
-                    if(evaluated.Contains((x, y)))
+                    if (evaluated.Contains((x, y)))
                         continue;
-                    if(heatmap[y][x] == 9)
+                    if (heatmap[y][x] == 9)
                         continue;
                     evaluated.Add((x, y));
                     size++;
-                    if(y > 0 && heatmap[y-1][x] > current)
-                        basin.Add((x, y-1));
-                    if(y < heatmap.Length-1 && heatmap[y+1][x] > current)
-                        basin.Add((x, y+1));
-                    if(x > 0 && heatmap[y][x-1] > current)
-                        basin.Add((x-1, y));
-                    if(x < heatmap[y].Length-1 && heatmap[y][x+1] > current)
-                        basin.Add((x+1, y));
+                    if (y > 0 && heatmap[y - 1][x] > current)
+                        basin.Add((x, y - 1));
+                    if (y < heatmap.Length - 1 && heatmap[y + 1][x] > current)
+                        basin.Add((x, y + 1));
+                    if (x > 0 && heatmap[y][x - 1] > current)
+                        basin.Add((x - 1, y));
+                    if (x < heatmap[y].Length - 1 && heatmap[y][x + 1] > current)
+                        basin.Add((x + 1, y));
                 }
 
                 return size;
             }
 
             var res = lows.Select(low => GetSizeOfBasin(low));
-            return res.OrderByDescending(s => s).Take(3).Aggregate(1L, (s1, s2) => s1*s2);
+            return res.OrderByDescending(s => s).Take(3).Aggregate(1L, (s1, s2) => s1 * s2);
         }
     }
 }

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day21 : Day
     {
         public Day21() : base(21, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -32,7 +33,7 @@ namespace Advent.y2021
                 {
                     var result = dice++;
                     diceThrows++;
-                    if (dice > 100) 
+                    if (dice > 100)
                         dice = 1;
                     return result;
                 }
@@ -47,7 +48,7 @@ namespace Advent.y2021
             var dice = 1;
             do
             {
-                if(((p1pos, p1score, dice, diceThrows) = TakeTurn(p1pos, p1score, dice, diceThrows)).p1score >= target 
+                if (((p1pos, p1score, dice, diceThrows) = TakeTurn(p1pos, p1score, dice, diceThrows)).p1score >= target
                 || ((p2pos, p2score, dice, diceThrows) = TakeTurn(p2pos, p2score, dice, diceThrows)).p2score >= target)
                     break;
             } while (true);
@@ -56,38 +57,38 @@ namespace Advent.y2021
 
         private long PlayPart2(int p1pos, int p2pos, int target)
         {
-            var outcomes = Enumerable.Range(1, 3).SelectMany(d1 => Enumerable.Range(1,3).SelectMany(d2 => Enumerable.Range(1,3).Select(d3 => d1+d2+d3))).ToArray();
-            Dictionary<(int P1pos, int P2pos, int P1score, int P2score, int Result, bool IsPlayerOne), (long P1Wins, long P2Wins)> results = new(); 
+            var outcomes = Enumerable.Range(1, 3).SelectMany(d1 => Enumerable.Range(1, 3).SelectMany(d2 => Enumerable.Range(1, 3).Select(d3 => d1 + d2 + d3))).ToArray();
+            Dictionary<(int P1pos, int P2pos, int P1score, int P2score, int Result, bool IsPlayerOne), (long P1Wins, long P2Wins)> results = new();
 
             (long P1Wins, long P2Wins) DiracTurn((int P1pos, int P2pos, int P1score, int P2score, int Result, bool IsPlayerOne) round)
             {
-                if(results.ContainsKey(round))
+                if (results.ContainsKey(round))
                     return results[round];
                 var pos = round.IsPlayerOne ? round.P1pos : round.P2pos;
                 var score = round.IsPlayerOne ? round.P1score : round.P2score;
                 pos += round.Result;
                 score += (pos -= pos > 10 ? 10 : 0);
-                if(score >= target)
+                if (score >= target)
                     return (results[round] = round.IsPlayerOne ? (1, 0) : (0, 1));
 
                 var current = round;
 
-                if(round.IsPlayerOne) 
+                if (round.IsPlayerOne)
                     (round.P1pos, round.P1score) = (pos, score);
-                else 
+                else
                     (round.P2pos, round.P2score) = (pos, score);
 
                 round.IsPlayerOne = !round.IsPlayerOne;
 
                 var (p1wins, p2wins) = outcomes
                     .Select(o => DiracTurn((round.P1pos, round.P2pos, round.P1score, round.P2score, o, round.IsPlayerOne)))
-                    .Aggregate((0L, 0L), (a, c) => (a.Item1+c.P1Wins, a.Item2+c.P2Wins));
+                    .Aggregate((0L, 0L), (a, c) => (a.Item1 + c.P1Wins, a.Item2 + c.P2Wins));
                 return results[current] = (p1wins, p2wins);
-            }       
-            
+            }
+
             var (p1wins, p2wins) = outcomes
                 .Select(t => DiracTurn((p1pos, p2pos, 0, 0, t, true)))
-                .Aggregate((0L, 0L), (a, c) => (a.Item1+c.P1Wins, a.Item2+c.P2Wins));
+                .Aggregate((0L, 0L), (a, c) => (a.Item1 + c.P1Wins, a.Item2 + c.P2Wins));
             return p1wins > p2wins ? p1wins : p2wins;
         }
     }

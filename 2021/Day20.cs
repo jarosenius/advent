@@ -4,18 +4,19 @@ using System.Linq;
 
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day20 : Day
     {
-        private static List<(int X, int Y)> Offsets = new List<(int X, int Y)> 
-        { 
-            (-1, -1), 
-            (0, -1), 
-            (1, -1), 
-            (-1, 0), 
-            (0, 0), 
-            (1, 0), 
-            (-1, 1), 
-            (0, 1), 
+        private static List<(int X, int Y)> Offsets = new List<(int X, int Y)>
+        {
+            (-1, -1),
+            (0, -1),
+            (1, -1),
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+            (-1, 1),
+            (0, 1),
             (1, 1)
         };
 
@@ -54,39 +55,39 @@ namespace Advent.y2021
             {
                 bool IsEnabled((int X, int Y) pos)
                 {
-                    if(i % 2 == 0)
+                    if (i % 2 == 0)
                         return image.Contains(pos);
-                    if(enhancement[0] == false || (pos.X >= min.X && pos.X <= max.X && pos.Y >= min.Y && pos.Y <= max.Y))
+                    if (enhancement[0] == false || (pos.X >= min.X && pos.X <= max.X && pos.Y >= min.Y && pos.Y <= max.Y))
                         return image.Contains(pos);
                     return true;
                 }
 
                 var positions = Offsets.Select(o => (o.X + pos.X, o.Y + pos.Y)).ToList();
-                var num = Convert.ToInt32(new string(positions.Select(p => IsEnabled(p) ? '1' : '0').ToArray()), 2);      
-                if(enhancement[num])
+                var num = Convert.ToInt32(new string(positions.Select(p => IsEnabled(p) ? '1' : '0').ToArray()), 2);
+                if (enhancement[num])
                     set.Add(pos);
             }
 
-            var xCount = (max.X - min.X)+3;
-            var yCount = (max.Y - min.Y)+3;
+            var xCount = (max.X - min.X) + 3;
+            var yCount = (max.Y - min.Y) + 3;
             HashSet<(int X, int Y)> res = new();
 
-            Enumerable.Range(min.Y-1, yCount).SelectMany(y => 
-                Enumerable.Range(min.X-1, xCount).Select(x => (x, y)))
+            Enumerable.Range(min.Y - 1, yCount).SelectMany(y =>
+                Enumerable.Range(min.X - 1, xCount).Select(x => (x, y)))
             .ForEach(p => AddIfEnabled(p, enhancement, res));
             return res;
         }
 
         private void PrintImage(HashSet<(int X, int Y)> image)
         {
-            var rowWidth = image.Max(k => k.X) - image.Min(k => k.X)+1;
+            var rowWidth = image.Max(k => k.X) - image.Min(k => k.X) + 1;
             var written = 0;
             for (var y = image.Min(p => p.Y); y <= image.Max(p => p.Y); y++)
             {
                 for (var x = image.Min(p => p.X); x <= image.Max(p => p.X); x++)
                 {
                     Console.Write(image.Contains((x, y)) ? "#" : ".");
-                    if(++written == rowWidth)
+                    if (++written == rowWidth)
                     {
                         Console.Write(Environment.NewLine);
                         written = 0;

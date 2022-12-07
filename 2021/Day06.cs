@@ -1,5 +1,5 @@
-﻿using System.Collections.Concurrent;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day06 : Day
     {
         public Day06() : base(6, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
         {
-            var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());    
+            var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());
             for (int i = 0; i < 80; i++)
             {
                 lanterns = Tick(lanterns);
@@ -25,7 +26,7 @@ namespace Advent.y2021
         }
         public override long Part2(List<string> input)
         {
-            var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());    
+            var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());
             for (int i = 0; i < 256; i++)
             {
                 lanterns = Tick(lanterns);

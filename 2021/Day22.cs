@@ -4,11 +4,12 @@ using System.Linq;
 
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day22 : Day
     {
         public Day22() : base(22, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -22,7 +23,8 @@ namespace Advent.y2021
 
         private long RebootReactor(List<string> input, bool limit = false, int lim = 50)
         {
-            var instructions = input.Select(r => r.Split(new[]{',', ' '},StringSplitOptions.RemoveEmptyEntries)).Select(i => {
+            var instructions = input.Select(r => r.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)).Select(i =>
+            {
                 var x = i[1][2..].Split("..").Select(int.Parse).ToArray();
                 var y = i[2][2..].Split("..").Select(int.Parse).ToArray();
                 var z = i[3][2..].Split("..").Select(int.Parse).ToArray();
@@ -30,10 +32,11 @@ namespace Advent.y2021
             }).ToArray();
             List<Cuboid> state = new();
             var instr = limit ? instructions.Where(i => i.RangesWithinLimit(lim)) : instructions;
-            instr.ForEach(i =>{
+            instr.ForEach(i =>
+            {
                 List<Cuboid> tmpState = new();
-                if(i.On)
-                    tmpState.Add(i.Cuboid);      
+                if (i.On)
+                    tmpState.Add(i.Cuboid);
                 state.ForEach(s => tmpState.AddRange(s.SymetricDifference(i.Cuboid)));
                 state = tmpState;
             });
@@ -43,8 +46,8 @@ namespace Advent.y2021
 
         private record Range(long From, long To)
         {
-            public long Count => 1+To-From;
-            public bool WithinLimit(int limit) => From >= limit*-1 && To <= limit;
+            public long Count => 1 + To - From;
+            public bool WithinLimit(int limit) => From >= limit * -1 && To <= limit;
         }
         private record Cuboid(Range X, Range Y, Range Z)
         {
@@ -58,24 +61,24 @@ namespace Advent.y2021
             public List<Cuboid> SymetricDifference(Cuboid c)
             {
                 var intersection = Intersection(c);
-                if(!intersection.Valid)
-                    return new(){this};
+                if (!intersection.Valid)
+                    return new() { this };
 
-                List<Cuboid> res = new();    
-                if(intersection.X.From > X.From)
-                    res.Add(new Cuboid(new Range(X.From, intersection.X.From-1), Y, Z));
-                if(intersection.X.To < X.To)
-                    res.Add(new Cuboid(new Range(intersection.X.To+1, X.To), Y, Z));
+                List<Cuboid> res = new();
+                if (intersection.X.From > X.From)
+                    res.Add(new Cuboid(new Range(X.From, intersection.X.From - 1), Y, Z));
+                if (intersection.X.To < X.To)
+                    res.Add(new Cuboid(new Range(intersection.X.To + 1, X.To), Y, Z));
 
-                if(intersection.Y.From > Y.From)
-                    res.Add(new Cuboid(intersection.X, new Range(Y.From, intersection.Y.From-1), Z));
-                if(intersection.Y.To < Y.To)
-                    res.Add(new Cuboid(intersection.X, new Range(intersection.Y.To+1, Y.To), Z));
+                if (intersection.Y.From > Y.From)
+                    res.Add(new Cuboid(intersection.X, new Range(Y.From, intersection.Y.From - 1), Z));
+                if (intersection.Y.To < Y.To)
+                    res.Add(new Cuboid(intersection.X, new Range(intersection.Y.To + 1, Y.To), Z));
 
-                if(intersection.Z.From > Z.From)
-                    res.Add(new Cuboid(intersection.X, intersection.Y, new Range(Z.From, intersection.Z.From-1)));
-                if(intersection.Z.To < Z.To)
-                    res.Add(new Cuboid(intersection.X, intersection.Y, new Range(intersection.Z.To+1, Z.To)));
+                if (intersection.Z.From > Z.From)
+                    res.Add(new Cuboid(intersection.X, intersection.Y, new Range(Z.From, intersection.Z.From - 1)));
+                if (intersection.Z.To < Z.To)
+                    res.Add(new Cuboid(intersection.X, intersection.Y, new Range(intersection.Z.To + 1, Z.To)));
 
                 return res;
             }

@@ -4,11 +4,12 @@ using System.Linq;
 
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day15 : Day
     {
         public Day15() : base(15, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -19,7 +20,7 @@ namespace Advent.y2021
         }
         public override long Part2(List<string> input)
         {
-            var map = input.SelectMany((r, y) => r.Select((c, x) => new KeyValuePair<(int X, int Y), int>((x, y), int.Parse(c.ToString())))).ToDictionary(c => c.Key, c => c.Value);     
+            var map = input.SelectMany((r, y) => r.Select((c, x) => new KeyValuePair<(int X, int Y), int>((x, y), int.Parse(c.ToString())))).ToDictionary(c => c.Key, c => c.Value);
             map = GrowMap(map);
             var shortest = FindAStarPath(map, (0, 0), (map.Keys.Max(p => p.X), map.Keys.Max(p => p.Y)));
             return shortest.Skip(1).Sum(v => map[v]);
@@ -36,12 +37,12 @@ namespace Advent.y2021
             var pos = start;
             do
             {
-                if(pos == goal)
+                if (pos == goal)
                     return WalkPathBackwards(path, pos);
                 GetNeighbors(pos, maxX, maxY).ForEach(neighbor =>
                 {
                     var neighborScore = score[pos] + map.GetValueOrDefault(neighbor, 10000);
-                    if(neighborScore < score.GetValueOrDefault(neighbor, int.MaxValue))
+                    if (neighborScore < score.GetValueOrDefault(neighbor, int.MaxValue))
                     {
                         path[neighbor] = pos;
                         score[neighbor] = neighborScore;
@@ -57,14 +58,14 @@ namespace Advent.y2021
         {
             List<(int X, int Y)> res = new();
             var (X, Y) = pos;
-            if(X < maxX)
-                res.Add((X+1, Y));
-            if(X > 0)
-                res.Add((X-1, Y));
-            if(Y > 0)
-                res.Add((X, Y-1));
-            if(Y < maxY)
-                res.Add((X, Y+1));
+            if (X < maxX)
+                res.Add((X + 1, Y));
+            if (X > 0)
+                res.Add((X - 1, Y));
+            if (Y > 0)
+                res.Add((X, Y - 1));
+            if (Y < maxY)
+                res.Add((X, Y + 1));
             return res;
         }
 
@@ -72,17 +73,17 @@ namespace Advent.y2021
         {
             Stack<(int X, int Y)> res = new();
             res.Push(pos);
-            while(path.ContainsKey(pos))
+            while (path.ContainsKey(pos))
             {
                 pos = path[pos];
                 res.Push(pos);
             }
             return res.ToList();
         }
-        
+
         private Dictionary<(int X, int Y), int> GrowMap(Dictionary<(int X, int Y), int> map)
         {
-            var max = map.Max(p => p.Key.X)+1;
+            var max = map.Max(p => p.Key.X) + 1;
             var nmap = map.ToDictionary(d => d.Key, d => d.Value);
             nmap.Keys.ToList().ForEach(p =>
             {

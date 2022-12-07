@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day01 : Day
     {
         public Day01() : base(1, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -18,7 +19,7 @@ namespace Advent.y2021
             var nums = input.Select(n => int.Parse(n)).ToList();
             var numbersToUse = (nums.Count / 3) * 3;
             var threeMeasure = nums.Take(numbersToUse).Select((n, idx) => nums.Skip(idx).Take(3).Sum()).ToList();
-            
+
             return GetIncreases(threeMeasure);
         }
 

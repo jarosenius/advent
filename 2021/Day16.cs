@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day16 : Day
     {
         public Day16() : base(16, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -24,44 +25,44 @@ namespace Advent.y2021
         private (Packet Packet, int Offset) DecodePacket(string packet)
         {
             List<Packet> res = new();
-            var version = (int)Utils.ConvertFromBinaryString(packet[..3]);            
-            var type = (int)Utils.ConvertFromBinaryString(packet[3..6]);     
-            
+            var version = (int)Utils.ConvertFromBinaryString(packet[..3]);
+            var type = (int)Utils.ConvertFromBinaryString(packet[3..6]);
+
             var i = 6;
-            if(type == 4) // Packnet contains number
+            if (type == 4) // Packnet contains number
             {
                 string current;
                 List<string> nums = new();
                 do
                 {
-                    current = packet[i..(i+=5)];
+                    current = packet[i..(i += 5)];
                     nums.Add(current[1..]);
                 } while (current[0] != '0');
-                var num = Utils.ConvertFromBinaryString(string.Join("",nums));
+                var num = Utils.ConvertFromBinaryString(string.Join("", nums));
                 return (new Packet(version, type, num, new()), i);
             }
             else // Packet contains operator
             {
                 var lengthTypeId = packet[i++];
-                if(lengthTypeId == '0')
+                if (lengthTypeId == '0')
                 {
-                    var length = (int)Utils.ConvertFromBinaryString(packet[i..(i+=15)]);
-                    while(length > 0)
+                    var length = (int)Utils.ConvertFromBinaryString(packet[i..(i += 15)]);
+                    while (length > 0)
                     {
-                        var (p, ii) = DecodePacket(packet[i..(i+length)]);
+                        var (p, ii) = DecodePacket(packet[i..(i + length)]);
                         res.Add(p);
-                        i+=ii;
-                        length-=ii;
+                        i += ii;
+                        length -= ii;
                     }
                 }
                 else
                 {
-                    var packets = Utils.ConvertFromBinaryString(packet[i..(i+=11)]);
+                    var packets = Utils.ConvertFromBinaryString(packet[i..(i += 11)]);
                     for (int j = 0; j < packets; j++)
                     {
                         var (p, ii) = DecodePacket(packet[i..]);
                         res.Add(p);
-                        i+=ii;
+                        i += ii;
                     }
                 }
             }

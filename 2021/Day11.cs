@@ -5,11 +5,12 @@ using System.Linq;
 
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day11 : Day
     {
         public Day11() : base(11, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -33,14 +34,14 @@ namespace Advent.y2021
             } while (flat.All(o => o.Flashed) == false);
 
             return i;
-        }            
+        }
 
         private class Octopus
         {
-            public int X {get;private set;}
-            public int Y {get;private set;}
-            public bool Flashed {get;private set;}
-            public int EnergyLevel {get;private set;} = 0;
+            public int X { get; private set; }
+            public int Y { get; private set; }
+            public bool Flashed { get; private set; }
+            public int EnergyLevel { get; private set; } = 0;
             private List<Octopus> neighbors = new();
             private int lastStep = -1;
             public Octopus(int energyLevel, int x, int y)
@@ -53,30 +54,30 @@ namespace Advent.y2021
             public void AddNeighbors(IEnumerable<Octopus> n)
             {
                 var toAdd = n.Except(neighbors);
-                if(toAdd.Any() == false)
+                if (toAdd.Any() == false)
                     return;
                 neighbors.AddRange(toAdd);
             }
 
             public (long Flashes, bool Flashed) IncreaseEnergy(int step)
             {
-                if(step > lastStep && Flashed)
+                if (step > lastStep && Flashed)
                 {
                     EnergyLevel = 0;
                     Flashed = false;
                 }
-                
+
                 EnergyLevel++;
-                if(Flashed && lastStep == step)
+                if (Flashed && lastStep == step)
                     return (0, true);
                 lastStep = step;
-                if(EnergyLevel > 9)
+                if (EnergyLevel > 9)
                 {
                     Flashed = true;
                     return (neighbors.Sum(n => n.IncreaseEnergy(step).Flashes) + 1, true);
                 }
                 return (0, false);
             }
-        }   
+        }
     }
 }

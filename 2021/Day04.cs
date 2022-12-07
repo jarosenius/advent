@@ -2,11 +2,12 @@
 using System.Linq;
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day04 : Day
     {
         public Day04() : base(4, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
@@ -28,13 +29,13 @@ namespace Advent.y2021
             {
                 for (int i = 0; i < boards.Count; i++)
                 {
-                    if(boards[i].HasWon)
+                    if (boards[i].HasWon)
                         continue;
 
-                    if(boards[i].Mark(n))
+                    if (boards[i].Mark(n))
                     {
                         winners.Add(boards[i]);
-                        if(lastIsWinner == false || winners.Count == boards.Count)
+                        if (lastIsWinner == false || winners.Count == boards.Count)
                             return boards[i].UnmarkedSum * n;
                     }
                 }
@@ -50,16 +51,16 @@ namespace Advent.y2021
             List<Board> boards = new();
             var i = 2;
 
-            while(i < input.Count())
+            while (i < input.Count())
             {
-                if(string.IsNullOrEmpty(input.ElementAt(i)))
+                if (string.IsNullOrEmpty(input.ElementAt(i)))
                 {
                     i++;
                 }
                 else
                 {
                     boards.Add(Board.Create(input.Skip(i).Take(5)));
-                    i+=5;
+                    i += 5;
                 }
             }
             return (numbers, boards);
@@ -70,7 +71,7 @@ namespace Advent.y2021
             private readonly int Size;
             private readonly Cell[][] Cells;
             private Dictionary<int, Cell> CellsByNumber;
-            public bool HasWon {get;private set;}
+            public bool HasWon { get; private set; }
             public int UnmarkedSum => Cells.SelectMany(r => r.Select(c => c)).Where(c => c.Marked == false).Sum(c => c.Number);
 
             public Board(IEnumerable<IEnumerable<int>> rows)
@@ -90,7 +91,7 @@ namespace Advent.y2021
 
             public bool Mark(int number)
             {
-                if(CellsByNumber.ContainsKey(number))
+                if (CellsByNumber.ContainsKey(number))
                 {
                     CellsByNumber[number].Marked = true;
                     HasWon = CheckWin();
@@ -111,7 +112,7 @@ namespace Advent.y2021
             }
         }
 
-        private class Cell 
+        private class Cell
         {
             public int Number { get; set; }
             public bool Marked { get; set; }
@@ -121,6 +122,6 @@ namespace Advent.y2021
                 Number = number;
                 Marked = marked;
             }
-        }  
+        }
     }
 }

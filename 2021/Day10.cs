@@ -6,29 +6,30 @@ using System.Threading.Tasks;
 
 namespace Advent.y2021
 {
+    [AoC(2021)]
     public class Day10 : Day
     {
         public Day10() : base(10, 2021)
         {
-            
+
         }
 
         public override long Part1(List<string> input)
         {
-            Dictionary<char, long> cost = new(){{')', 3}, {']', 57}, {'}', 1197}, {'>', 25137}};
-            return input.Select(line => 
+            Dictionary<char, long> cost = new() { { ')', 3 }, { ']', 57 }, { '}', 1197 }, { '>', 25137 } };
+            return input.Select(line =>
             {
                 var (end, s) = GetUntilErrorOrComplete(line);
-                if(line.Length == end)
-                   return 0;
+                if (line.Length == end)
+                    return 0;
                 return s.Count > 0 ? cost[line.Skip(end).FirstOrDefault()] : 0;
             }).Sum();
         }
         public override long Part2(List<string> input)
         {
-            Dictionary<char, long> cost = new(){{'(', 1}, {'[', 2}, {'{', 3}, {'<', 4}};
-            var x = 
-            input.Select(line => 
+            Dictionary<char, long> cost = new() { { '(', 1 }, { '[', 2 }, { '{', 3 }, { '<', 4 } };
+            var x =
+            input.Select(line =>
             {
                 var (end, s) = GetUntilErrorOrComplete(line);
                 return (LineLength: line.Length, ErrorPosOrEnd: end, s);
@@ -37,26 +38,26 @@ namespace Advent.y2021
             .Select(r =>
             {
                 var res = 0L;
-                while(r.s.Count > 0)
+                while (r.s.Count > 0)
                 {
-                    res*=5;
-                    res+=cost[r.s.Pop()];
+                    res *= 5;
+                    res += cost[r.s.Pop()];
                 }
-                
+
                 return res;
             })
             .OrderBy(r => r).ToList();
 
-            return x.Skip(x.Count/2).First();
+            return x.Skip(x.Count / 2).First();
         }
 
         private (int ErrorPosOrEnd, Stack<char> Stack) GetUntilErrorOrComplete(string line)
         {
             Stack<char> s = new();
-            var untilError = line.TakeWhile(c => 
+            var untilError = line.TakeWhile(c =>
             {
                 char checkFor;
-                switch(c)
+                switch (c)
                 {
                     case '(':
                     case '[':
@@ -79,7 +80,7 @@ namespace Advent.y2021
                     default:
                         return false;
                 }
-                if(s.Peek() == checkFor)
+                if (s.Peek() == checkFor)
                 {
                     s.Pop();
                     return true;
