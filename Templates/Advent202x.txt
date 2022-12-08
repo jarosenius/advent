@@ -1,0 +1,10 @@
+namespace Advent.y202x;
+
+[AoC(2020)]
+public class Advent202x : Advent
+{
+    public Advent202x() : base(2020)
+    {
+
+    }
+}

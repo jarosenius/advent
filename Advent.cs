@@ -81,6 +81,8 @@ namespace Advent
             Days[day.DAY] = day;
         }
 
+        public bool HasDay(int day) => Days.ContainsKey(day);
+
         public async Task Solve(bool useExampleData, params int[] daysToSolve)
         {
             Days.TryGetValue(daysToSolve.First(), out var day);
