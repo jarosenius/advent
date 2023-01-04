@@ -11,7 +11,7 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var players = input.Select(l => int.Parse(l.Split(":")[1])).ToArray();
             var target = 1000;
@@ -19,7 +19,7 @@ namespace Advent.y2021
             var loser = (p1score >= target ? p2score : p1score);
             return dieThrows * loser;
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var players = input.Select(l => int.Parse(l.Split(":")[1])).ToArray();
             return PlayPart2(players[0], players[1], 21);

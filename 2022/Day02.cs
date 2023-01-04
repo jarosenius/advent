@@ -10,7 +10,7 @@ public class Day02 : Day
 
     }
 
-    public override long Part1(List<string> input)
+    public override object Part1(List<string> input)
     {
         var scores = new Dictionary<string, int>()
         {
@@ -27,7 +27,7 @@ public class Day02 : Day
 
         return input.Sum(row => scores[$"{row[2..]}{row[..1]}"]);
     }
-    public override long Part2(List<string> input)
+    public override object Part2(List<string> input)
     {
         var scores = new Dictionary<string, int>()
         {

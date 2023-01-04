@@ -10,10 +10,10 @@ namespace Advent.y2020
     {
         public Day07() : base(7, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var rules = new List<Tuple<string, List<string>>>();
             foreach (var rawRule in input)
@@ -35,10 +35,10 @@ namespace Advent.y2020
                 rules.Add(Tuple.Create(color, containsColor));
             }
 
-            
+
             return GetNumberOfBagsThatFitColor("shiny gold", rules);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var rules = new List<Tuple<string, List<string>>>();
             foreach (var rawRule in input)
@@ -59,8 +59,8 @@ namespace Advent.y2020
                 rules.Add(Tuple.Create(color, containsColor));
             }
 
-            
-            return GetBagsRequiredForRule("shiny gold", rules)-1;
+
+            return GetBagsRequiredForRule("shiny gold", rules) - 1;
         }
 
         static int GetBagsRequiredForRule(string ruleName, List<Tuple<string, List<string>>> rules)
@@ -70,7 +70,7 @@ namespace Advent.y2020
                 return 1;
 
             var count = 1;
-            foreach(var sub in rule.Item2)
+            foreach (var sub in rule.Item2)
             {
                 var splitPos = sub.IndexOf(" ");
                 var snumber = sub.Substring(0, splitPos + 1).Trim();
@@ -86,9 +86,9 @@ namespace Advent.y2020
             switch (color)
             {
                 case "dotted black":
-                   return 0;
+                    return 0;
                 case "faded blue":
-                   return 0;
+                    return 0;
                 case "light red":
                     return GetBagsInBagWithColor("bright white") + 2 * GetBagsInBagWithColor("muted yellow");
                 case "dark orange":
@@ -102,7 +102,7 @@ namespace Advent.y2020
                 case "dark olive":
                     return 3 * GetBagsInBagWithColor("faded blue") + 4 * GetBagsInBagWithColor("dotted black");
                 case "vibrant plum":
-                    return 5*GetBagsInBagWithColor("faded blue") + 6 * GetBagsInBagWithColor("dotted black");
+                    return 5 * GetBagsInBagWithColor("faded blue") + 6 * GetBagsInBagWithColor("dotted black");
             }
             return 0;
         }
@@ -110,9 +110,9 @@ namespace Advent.y2020
         static int GetNumberOfBagsThatFitColor(string color, List<Tuple<string, List<string>>> rules)
         {
             var count = 0;
-            foreach(var bag in rules.Select(r => r.Item1))
+            foreach (var bag in rules.Select(r => r.Item1))
             {
-                if(CanBagFitColor(bag, color, rules))
+                if (CanBagFitColor(bag, color, rules))
                 {
                     count++;
                 }

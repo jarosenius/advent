@@ -13,7 +13,7 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var reg = new Regex(@"[xy]=(-?\d+)..(-?\d+)", RegexOptions.Compiled);
             var match = reg.Matches(input[0]);
@@ -23,7 +23,7 @@ namespace Advent.y2021
             return GetHighestAndDistinctVelocities(area).Highest;
         }
 
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var reg = new Regex(@"[xy]=(-?\d+)..(-?\d+)", RegexOptions.Compiled);
             var match = reg.Matches(input[0]);

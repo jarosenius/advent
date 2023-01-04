@@ -14,7 +14,7 @@ namespace Advent.y2021
         }
         private int[][] heatmap;
         private List<(int X, int Y)> lows = new();
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             heatmap = input.Select(i => i.Select(c => int.Parse(c.ToString())).ToArray()).ToArray();
             var sum = 0;
@@ -37,7 +37,7 @@ namespace Advent.y2021
             }
             return sum;
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             HashSet<(int X, int Y)> evaluated = new();
             int GetSizeOfBasin((int X, int Y) c)

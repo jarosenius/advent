@@ -11,13 +11,13 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var vents = GetVents(input.ToList(), true);
             return CountOverlappingAtleastNTimes(vents, 2);
         }
 
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var vents = GetVents(input.ToList(), false);
             return CountOverlappingAtleastNTimes(vents, 2);

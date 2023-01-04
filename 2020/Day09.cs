@@ -10,12 +10,12 @@ namespace Advent.y2020
     {
         public Day09() : base(9, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
-             return Part1(input, 25);
+            return Part1(input, 25);
         }
         static long Part1(IEnumerable<string> input, int save)
         {
@@ -33,12 +33,12 @@ namespace Advent.y2020
                 else
                     return num;
             }
-            
+
             return -1;
         }
         private static bool IsNumberValid(long num, List<long> toSave, int save)
         {
-            if(toSave.Count() < save)
+            if (toSave.Count() < save)
             {
                 toSave.Add(num);
                 return true;
@@ -55,11 +55,11 @@ namespace Advent.y2020
             return valid;
         }
 
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var part1 = Part1(input, 25);
-             return 
-            Part2(input, 2, part1);
+            return
+           Part2(input, 2, part1);
         }
 
         static long Part2(IEnumerable<string> input, int startWith, long lookFor)
@@ -69,7 +69,7 @@ namespace Advent.y2020
             for (int i = startWith; i < numbers.Count(); i++)
             {
                 var num = numbers.ElementAt(i);
-                while(toSave.Sum() + num > lookFor)
+                while (toSave.Sum() + num > lookFor)
                 {
                     toSave.RemoveAt(0);
                 }

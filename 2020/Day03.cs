@@ -10,21 +10,21 @@ namespace Advent.y2020
     {
         public Day03() : base(3, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
-              
-            return CountTrees(input, 3, 1);;
+
+            return CountTrees(input, 3, 1); ;
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
-             return CountTrees(input, 1, 1)
-            * CountTrees(input, 3, 1)
-            * CountTrees(input, 5, 1)
-            * CountTrees(input, 7, 1)
-            * CountTrees(input, 1, 2);;
+            return CountTrees(input, 1, 1)
+           * CountTrees(input, 3, 1)
+           * CountTrees(input, 5, 1)
+           * CountTrees(input, 7, 1)
+           * CountTrees(input, 1, 2); ;
         }
 
         long CountTrees(IEnumerable<string> lines, int right, int down)

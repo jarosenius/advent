@@ -12,14 +12,14 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var parts = input.Select(x => x.Split("|"));
             var rows = parts.Select(p => (pattern: p[0].Split(' ', StringSplitOptions.RemoveEmptyEntries), output: p[1].Split(' ', StringSplitOptions.RemoveEmptyEntries))).ToList();
 
             return rows.Sum(r => r.output.Count(c => c.Length is 7 or > 1 and < 5));
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var parts = input.Select(x => x.Split("|"));
             var rows = parts.Select(p => (pattern: p[0].Split(' ', StringSplitOptions.RemoveEmptyEntries), output: p[1].Split(' ', StringSplitOptions.RemoveEmptyEntries))).ToList();

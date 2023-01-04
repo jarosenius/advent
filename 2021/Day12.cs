@@ -13,7 +13,7 @@ namespace Advent.y2021
         {
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             ConcurrentDictionary<string, Cave> Caves = new();
             input.ForEach(l =>
@@ -30,7 +30,7 @@ namespace Advent.y2021
             Caves.TryGetValue("start", out var start);
             return start.ConnectedCaves.Sum(c => c.GetPathsToEnd(new List<string>() { "start" }, false));
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             ConcurrentDictionary<string, Cave> Caves = new();
             input.ForEach(l =>

@@ -10,14 +10,14 @@ namespace Advent.y2020
     {
         public Day12() : base(12, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             return 0;
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             return 0;
         }

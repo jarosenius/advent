@@ -13,13 +13,13 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var json = input.Select(s => JsonConvert.DeserializeObject<JArray>(s)).Select(j => SnailNum.Create(j)).ToArray();
             var a = json.Skip(1).Aggregate(json[0], (r, s) => r + s);
             return a.Magnitude;
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             long best = 0;
             for (int i = 0; i < input.Count; i++)

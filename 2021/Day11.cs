@@ -13,14 +13,14 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var octopi = input.Select((l, y) => l.Select((c, x) => new Octopus(int.Parse(c.ToString()), x, y)).ToArray()).ToArray();
             var flat = octopi.SelectMany(o => o);
             flat.ForEach(o => o.AddNeighbors(octopi.GetNeighbors(o.X, o.Y, true)));
             return Enumerable.Range(0, 100).Sum(i => flat.Sum(o => o.IncreaseEnergy(i).Flashes));
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var octopi = input.Select((l, y) => l.Select((c, x) => new Octopus(int.Parse(c.ToString()), x, y)).ToArray()).ToArray();
             var flat = octopi.SelectMany(o => o).ToList();

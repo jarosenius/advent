@@ -8,33 +8,33 @@ public class Day04 : Day
 {
     public Day04() : base(4, 2022)
     {
-        
+
     }
 
-    public override long Part1(List<string> input)
+    public override object Part1(List<string> input)
     {
-        return GetSections(input).Count(sec => 
+        return GetSections(input).Count(sec =>
         {
             var f = sec.First();
             var t = sec.Last();
 
-            return f.From <= t.From && t.To <= f.To || 
+            return f.From <= t.From && t.To <= f.To ||
                     t.From <= f.From && f.To <= t.To;
         });
     }
-    public override long Part2(List<string> input)
+    public override object Part2(List<string> input)
     {
-        return GetSections(input).Count(sec => 
+        return GetSections(input).Count(sec =>
         {
             var f = sec.First();
             var t = sec.Last();
 
-            return f.To >= t.From && f.From <= t.To || 
+            return f.To >= t.From && f.From <= t.To ||
                     t.To >= f.From && t.From <= f.To;
         });
     }
 
-    private IEnumerable<IEnumerable<Section>> GetSections(IEnumerable<string> input) 
+    private IEnumerable<IEnumerable<Section>> GetSections(IEnumerable<string> input)
     {
         return input
             .Select(row => row.Split(',')

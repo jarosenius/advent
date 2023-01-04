@@ -11,13 +11,13 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var binString = string.Join("", input.First().Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
             return DecodePacket(binString).Packet.VersionSum;
         }
 
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var binString = string.Join("", input.First().Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
             return DecodePacket(binString).Packet.Solve();

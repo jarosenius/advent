@@ -12,7 +12,7 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             StringBuilder sb = new();
 
@@ -29,7 +29,7 @@ namespace Advent.y2021
             return res;
         }
 
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var oxygen = GetData(input, r => r.Ones >= r.Zeroes);
             var co2 = GetData(input, r => r.Ones < r.Zeroes);

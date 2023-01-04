@@ -11,11 +11,11 @@ namespace Advent.y2021
         {
 
         }
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             return ApplyInsertions(10, input);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             return ApplyInsertions(40, input);
         }

@@ -10,10 +10,10 @@ namespace Advent.y2020
     {
         public Day16() : base(16, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var limits = new Dictionary<string, (int Min, int Max)[]>();
             var limitsRaw = new List<string>();
@@ -21,16 +21,16 @@ namespace Advent.y2020
             var neighborRaw = new List<string>();
 
             input.TakeWhile(s => string.IsNullOrEmpty(s) == false).ToList().ForEach(limitsRaw.Add);
-            input.Skip(limitsRaw.Count+1).TakeWhile(s => string.IsNullOrEmpty(s) == false).ToList().ForEach(ticketRaw.Add);
-            input.Skip(limitsRaw.Count+ticketRaw.Count+2).ToList().ForEach(neighborRaw.Add);
+            input.Skip(limitsRaw.Count + 1).TakeWhile(s => string.IsNullOrEmpty(s) == false).ToList().ForEach(ticketRaw.Add);
+            input.Skip(limitsRaw.Count + ticketRaw.Count + 2).ToList().ForEach(neighborRaw.Add);
 
             limitsRaw.ForEach(x => AddLimit(x, limits));
             var ticket = ticketRaw.ElementAt(1).Split(",").Select(long.Parse);
             var neighbors = neighborRaw.Skip(1).Select(n => n.Split(",")).Select(x => x.Select(y => int.Parse(y)));
-  
-             return Part1(limits, neighbors, ticket);
+
+            return Part1(limits, neighbors, ticket);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var limits = new Dictionary<string, (int Min, int Max)[]>();
             var limitsRaw = new List<string>();
@@ -38,14 +38,14 @@ namespace Advent.y2020
             var neighborRaw = new List<string>();
 
             input.TakeWhile(s => string.IsNullOrEmpty(s) == false).ToList().ForEach(limitsRaw.Add);
-            input.Skip(limitsRaw.Count+1).TakeWhile(s => string.IsNullOrEmpty(s) == false).ToList().ForEach(ticketRaw.Add);
-            input.Skip(limitsRaw.Count+ticketRaw.Count+2).ToList().ForEach(neighborRaw.Add);
+            input.Skip(limitsRaw.Count + 1).TakeWhile(s => string.IsNullOrEmpty(s) == false).ToList().ForEach(ticketRaw.Add);
+            input.Skip(limitsRaw.Count + ticketRaw.Count + 2).ToList().ForEach(neighborRaw.Add);
 
             limitsRaw.ForEach(x => AddLimit(x, limits));
             var ticket = ticketRaw.ElementAt(1).Split(",").Select(long.Parse);
             var neighbors = neighborRaw.Skip(1).Select(n => n.Split(",")).Select(x => x.Select(y => int.Parse(y)));
-  
-             return Part2(limits, neighbors, ticket);;
+
+            return Part2(limits, neighbors, ticket); ;
         }
 
         static long Part1(Dictionary<string, (int Min, int Max)[]> limits, IEnumerable<IEnumerable<int>> neighbors, IEnumerable<long> ticket)

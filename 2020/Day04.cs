@@ -10,10 +10,10 @@ namespace Advent.y2020
     {
         public Day04() : base(4, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var passports = new List<List<Tuple<string, string>>>();
             var passport = new List<Tuple<string, string>>();
@@ -35,10 +35,10 @@ namespace Advent.y2020
 
             var expectedFields = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
             var optionalFields = new[] { "cid" };
-            
+
             return Day4_1(passports, expectedFields, optionalFields);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var passports = new List<List<Tuple<string, string>>>();
             var passport = new List<Tuple<string, string>>();
@@ -60,7 +60,7 @@ namespace Advent.y2020
 
             var expectedFields = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
             var optionalFields = new[] { "cid" };
-            
+
             return Day4_2(passports, expectedFields);
         }
 

@@ -12,13 +12,13 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var map = input.SelectMany((r, y) => r.Select((c, x) => new KeyValuePair<(int X, int Y), int>((x, y), int.Parse(c.ToString())))).ToDictionary(c => c.Key, c => c.Value);
             var shortest = FindAStarPath(map, (0, 0), (map.Keys.Max(p => p.X), map.Keys.Max(p => p.Y)));
             return shortest.Skip(1).Sum(v => map[v]);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var map = input.SelectMany((r, y) => r.Select((c, x) => new KeyValuePair<(int X, int Y), int>((x, y), int.Parse(c.ToString())))).ToDictionary(c => c.Key, c => c.Value);
             map = GrowMap(map);

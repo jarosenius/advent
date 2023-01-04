@@ -14,7 +14,7 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             Dictionary<char, long> cost = new() { { ')', 3 }, { ']', 57 }, { '}', 1197 }, { '>', 25137 } };
             return input.Select(line =>
@@ -25,7 +25,7 @@ namespace Advent.y2021
                 return s.Count > 0 ? cost[line.Skip(end).FirstOrDefault()] : 0;
             }).Sum();
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             Dictionary<char, long> cost = new() { { '(', 1 }, { '[', 2 }, { '{', 3 }, { '<', 4 } };
             var x =

@@ -10,19 +10,19 @@ namespace Advent.y2020
     {
         public Day17() : base(17, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var c = new Conway(input);
-            
+
             return c.CountActiveCubesAfter(6);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var c = new Conway4d(input);
-            
+
             return c.CountActiveCubesAfter(6);
         }
 

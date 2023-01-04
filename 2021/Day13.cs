@@ -11,12 +11,12 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var (points, instructions) = GetPointsAndInstructions(input);
             return PerformInstruction(instructions.First(), points).Count();
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var (points, instructions) = GetPointsAndInstructions(input);
             instructions.ForEach(i => points = PerformInstruction(i, points));

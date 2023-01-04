@@ -15,7 +15,7 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());
             for (int i = 0; i < 80; i++)
@@ -24,7 +24,7 @@ namespace Advent.y2021
             }
             return lanterns.Values.Sum();
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var lanterns = input.First().SplitByAndParseToInt(",").GroupBy(n => n).ToDictionary(g => g.Key, g => (long)g.Count());
             for (int i = 0; i < 256; i++)

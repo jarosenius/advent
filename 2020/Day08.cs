@@ -10,15 +10,15 @@ namespace Advent.y2020
     {
         public Day08() : base(8, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
-             
+
             return RunInstructions(input);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var instr = input.ToArray();
             var res = new List<Tuple<long, bool>>();
@@ -26,7 +26,7 @@ namespace Advent.y2020
             {
                 var op = instr[i].Split(' ');
                 var num = int.Parse(op[1]);
-                if(op[0] == "jmp")
+                if (op[0] == "jmp")
                 {
                     var ni = instr.ToArray();
                     ni[i] = $"nop {num}";
@@ -34,7 +34,7 @@ namespace Advent.y2020
                 }
             }
             var item = res.FirstOrDefault(itm => itm.Item2 == false);
-            
+
             return item.Item1;
         }
 
@@ -105,7 +105,7 @@ namespace Advent.y2020
                     i += (num > 0 ? num - 1 : num - 1);
                 }
             }
-            
+
             return Tuple.Create(acc, infinite);
         }
     }

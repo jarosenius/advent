@@ -13,14 +13,14 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var numbers = input.First().SplitByAndParseToInt(",");
             var max = numbers.Max();
             var min = numbers.Min();
             return Enumerable.Range(min, max - min + 1).Min(x => numbers.Sum(n => Math.Abs(n - x)));
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var numbers = input.First().SplitByAndParseToInt(",");
             var max = numbers.Max();

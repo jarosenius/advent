@@ -10,10 +10,10 @@ namespace Advent.y2020
     {
         public Day14() : base(14, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var memory = new Dictionary<int, long>();
             var mask = "";
@@ -21,7 +21,7 @@ namespace Advent.y2020
             foreach (var instruction in input)
             {
                 var parts = instruction.Split(" = ", StringSplitOptions.RemoveEmptyEntries);
-                if (parts[0] == "mask") 
+                if (parts[0] == "mask")
                     mask = parts[1];
                 else
                 {
@@ -33,10 +33,10 @@ namespace Advent.y2020
                 }
             }
 
-            
+
             return memory.Values.Sum();
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var memory = new Dictionary<long, long>();
             var mask = "";
@@ -58,11 +58,11 @@ namespace Advent.y2020
                 }
             }
 
-            
+
             return memory.Values.Sum();
         }
 
-        static long ConvertFromBinary(string bin, int i = 0) 
+        static long ConvertFromBinary(string bin, int i = 0)
         {
             return (long)bin.Select(c => c == '1' ? Math.Pow(2, i++) : 0 * i++).Sum();
         }
@@ -81,7 +81,7 @@ namespace Advent.y2020
             {
                 if (mask[i] == '1' || mask[i] == (part2 ? 'X' : '0'))
                     merged[i] = mask[i];
-                else if(mask[i] == 'X')
+                else if (mask[i] == 'X')
                 {
                     merged[i] = number[i];
                 }
@@ -105,7 +105,7 @@ namespace Advent.y2020
             var idx = mask.IndexOf('X');
             var modMask = mask.Remove(idx, 1);
             res.AddRange(new[] { modMask.Insert(idx, "0"), modMask.Insert(idx, "1") });
-            if (res[0].Contains("X") == false) 
+            if (res[0].Contains("X") == false)
                 return res.ToArray();
             res.AddRange(CreateBranchesFromMask(res[0]).Union(CreateBranchesFromMask(res[1])));
             return res;

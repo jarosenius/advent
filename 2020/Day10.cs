@@ -10,23 +10,23 @@ namespace Advent.y2020
     {
         public Day10() : base(10, 2020)
         {
-            
+
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             var list = input.Select(int.Parse);
-            
+
             return GetAdapters(list, 0, list.Max() + 3, 3, 0, 0);
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var maxDiff = 3;
             var list = new[] { 0 }.Concat(input.Select(int.Parse));
             var target = list.Max() + maxDiff;
             list = list.OrderBy(i => i).Reverse();
             Console.Clear();
-            
+
             return GetCombinations(list, maxDiff, target);
         }
 

@@ -10,11 +10,11 @@ namespace Advent.y2021
 
         }
 
-        public override long Part1(List<string> input)
+        public override object Part1(List<string> input)
         {
             return GetIncreases(input.ReadLinesAsInt());
         }
-        public override long Part2(List<string> input)
+        public override object Part2(List<string> input)
         {
             var nums = input.Select(n => int.Parse(n)).ToList();
             var numbersToUse = (nums.Count / 3) * 3;
