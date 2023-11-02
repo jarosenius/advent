@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/Advent.dll",
+            "program": "${workspaceFolder}/bin/Debug/net7.0/Advent.dll",
             "args": ["-d -1", "-e True"],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
