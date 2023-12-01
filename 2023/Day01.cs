@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Advent.y2023;
 
@@ -13,7 +14,11 @@ public class Day01 : Day
 
     public override object Part1(List<string> input)
     {
-        return 0;
+        return input
+            .Select(row => 
+                int.Parse(
+                    $"{Regex.Match(row, @"\d")}{Regex.Match(row, @"\d", RegexOptions.RightToLeft)}")
+            ).Sum();
     }
     public override object Part2(List<string> input)
     {
