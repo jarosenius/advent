@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Advent
 {
@@ -12,21 +13,21 @@ namespace Advent
             var d = day.ToString().PadLeft(2, '0');
             return $"./{year}/input/{d}.txt";
         }
+
         public static string GetExampleInputForDay(int day, int year)
         {
-            
             var d = day.ToString().PadLeft(2, '0');
             return $"./{year}/input/{d}_example.txt";
         }
 
-        public static long ConvertFromBinaryString(string bin) 
+        public static long ConvertFromBinaryString(string bin)
         {
             return Convert.ToInt64(bin, 2);
         }
 
-        public static string InvertBinaryString(string bin) 
+        public static string InvertBinaryString(string bin)
         {
-            return bin.Aggregate("", (r, c) => c == '1' ? r+="0" : r+="1");
+            return bin.Aggregate("", (r, c) => c == '1' ? r += "0" : r += "1");
         }
 
         public static IEnumerable<T> SliceColumn<T>(this T[][] matrix, int column)
@@ -36,6 +37,7 @@ namespace Advent
                 yield return matrix[x][column];
             }
         }
+
         public static IEnumerable<int> ReadLinesAsInt(this IEnumerable<string> lines)
         {
             return lines.Select(n => int.Parse(n));
@@ -43,20 +45,28 @@ namespace Advent
 
         public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
         {
-            foreach(T item in enumeration)
+            foreach (T item in enumeration)
             {
                 action(item);
             }
         }
 
-        public static int[][] SplitByFirstThenBySecondAndParseToInt(this string line, string splitFirst, string splitSecond)
+        public static int[][] SplitByFirstThenBySecondAndParseToInt(
+            this string line,
+            string splitFirst,
+            string splitSecond
+        )
         {
-            return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries).Select(p => p.SplitByAndParseToInt(splitSecond)).ToArray();
+            return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.SplitByAndParseToInt(splitSecond))
+                .ToArray();
         }
 
         public static int[] SplitByAndParseToInt(this string line, string split)
         {
-            return line.Split(split, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            return line.Split(split, StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToArray();
         }
 
         public static T[][] CreateMapWithSize<T>(int width, int length)
@@ -69,23 +79,27 @@ namespace Advent
             return grid;
         }
 
-        public static IEnumerable<T> GetNeighbors<T>(this IEnumerable<IEnumerable<T>> a, int xPos, int yPos, bool includeDiagonals)
+        public static IEnumerable<T> GetNeighbors<T>(
+            this IEnumerable<IEnumerable<T>> a,
+            int xPos,
+            int yPos,
+            bool includeDiagonals
+        )
         {
             var neighbors = new List<T>()
             {
-                a.ElementAt(xPos, yPos-1),
-                a.ElementAt(xPos+1, yPos),
-                a.ElementAt(xPos, yPos+1),
-                a.ElementAt(xPos-1, yPos),
+                a.ElementAt(xPos, yPos - 1),
+                a.ElementAt(xPos + 1, yPos),
+                a.ElementAt(xPos, yPos + 1),
+                a.ElementAt(xPos - 1, yPos),
             };
-            if(includeDiagonals)
+            if (includeDiagonals)
             {
-                neighbors.Add(a.ElementAt(xPos-1, yPos-1));
-                neighbors.Add(a.ElementAt(xPos+1, yPos-1));
-                neighbors.Add(a.ElementAt(xPos+1, yPos+1));
-                neighbors.Add(a.ElementAt(xPos-1, yPos+1));
+                neighbors.Add(a.ElementAt(xPos - 1, yPos - 1));
+                neighbors.Add(a.ElementAt(xPos + 1, yPos - 1));
+                neighbors.Add(a.ElementAt(xPos + 1, yPos + 1));
+                neighbors.Add(a.ElementAt(xPos - 1, yPos + 1));
             }
-            
 
             return neighbors.Where(n => n != null);
         }
@@ -96,12 +110,15 @@ namespace Advent
             var maxY = a.Count();
             var minX = 0;
             var maxX = a.ElementAt(0).Count();
-            if(xPos < minX || xPos >= maxX || yPos < minY || yPos >= maxY)
+            if (xPos < minX || xPos >= maxX || yPos < minY || yPos >= maxY)
                 return default(T);
             return a.ElementAt(yPos).ElementAt(xPos);
         }
 
-        public static IEnumerable<IEnumerable<T>> GroupWhile<T>(this IEnumerable<T> source, Func<T, bool> condition )
+        public static IEnumerable<IEnumerable<T>> GroupWhile<T>(
+            this IEnumerable<T> source,
+            Func<T, bool> condition
+        )
         {
             var list = new List<T> { source.First() };
             foreach (T item in source.Skip(1))
@@ -116,6 +133,27 @@ namespace Advent
                 list.Add(item);
             }
             yield return list;
+        }
+
+        public static MatchedContent[] Matches(
+            this IEnumerable<string> source,
+            string pattern,
+            RegexOptions regexOptions = RegexOptions.None
+        ) => source.Matches(new Regex(pattern, regexOptions));
+
+        public static MatchedContent[] Matches(this IEnumerable<string> source, Regex regex) =>
+            (
+                from y in Enumerable.Range(0, source.Count())
+                from m in regex.Matches(source.ElementAt(y))
+                select new MatchedContent(m.Value, m.Index, y)
+            ).ToArray();
+
+        public record MatchedContent(string Content, int XPos, int YPos)
+        {
+            public bool IsNextTo(MatchedContent n) =>
+                Math.Abs(n.YPos - YPos) <= 1
+                && XPos <= n.XPos + n.Content.Length
+                && n.XPos <= XPos + Content.Length;
         }
     }
 }
