@@ -51,14 +51,56 @@ public class Day03 : Day
 
     public override object Part2(List<string> input)
     {
-        var gears = input.Matches(@"\*");
-        var numbers = input.Matches(@"\d+");
+        var map = input.Select(row => row.ToCharArray()).ToArray();
+        var width = map[0].Length;
+        var height = map.Length;
 
-        return gears
-            .Select(g => numbers.Where(n => n.IsNextTo(g)).Select(n => int.Parse(n.Content)))
-            .Where(nb => nb.Count() == 2)
-            .Select(nb => nb.First() * nb.Last())
-            .Sum();
+        var gears = new Dictionary<(int X, int Y), List<int>>();
+        var neighbors = new HashSet<(int X, int Y)>();
+        var number = 0;
+        for (var y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                var c = map[y][x];
+
+                if (char.IsDigit(c))
+                {
+                    number = number * 10 + (c - '0');
+                    Offsets.ForEach(o =>
+                    {
+                        var nX = x + o.X;
+                        var nY = y + o.Y;
+                        if (nX < 0 || nY < 0 || nX >= width || nY >= height)
+                            return;
+                        if (map[nY][nX] == '*')
+                            neighbors.Add((nX, nY));
+                    });
+                }
+                else
+                    NewNumber();
+            }
+            NewNumber();
+        }
+
+        return gears.Where(g => g.Value.Count == 2).Select(g => g.Value[0] * g.Value[1]).Sum();
+
+        void NewNumber()
+        {
+            if (neighbors.Count > 0)
+            {
+                neighbors.ForEach(n =>
+                {
+                    var xy = (n.X, n.Y);
+                    if (!gears.ContainsKey(xy))
+                        gears[xy] = [];
+                    gears[xy].Add(number);
+                });
+            }
+
+            number = 0;
+            neighbors.Clear();
+        }
     }
 
     (int X, int Y)[] Offsets =>
