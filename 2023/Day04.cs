@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Advent.y2023;
@@ -18,10 +19,22 @@ public class Day04 : Day
     }
     public override object Part2(List<string> input)
     {
-        return 0;
+        var cards = CalculateCards(input).OrderBy(c => c.Id).ToList();
+        var result = new ConcurrentDictionary<int, long>();
+        cards.ForEach(c => CalculateWinnings(c, cards, result));
+        return result.Sum(kvp => kvp.Value);
     }
 
-    private IEnumerable<(int Id, long Value)> CalculateCards(List<string> input)
+    private static void CalculateWinnings((int Id, long Value, int TotalWinningNumbers) card, IEnumerable<(int Id, long Value, int TotalWinningNumbers)> cards, ConcurrentDictionary<int, long> result)
+    {
+        result.AddOrUpdate(card.Id, 1, (key, val) => val+1);
+        if(card.TotalWinningNumbers == 0)
+            return;
+        var copies = cards.Skip(card.Id).Take(card.TotalWinningNumbers).ToList();
+        copies.ForEach(c => CalculateWinnings(c, cards, result));
+    }
+
+    private static IEnumerable<(int Id, long Value, int TotalWinningNumbers)> CalculateCards(List<string> input)
     {
         return input.Select(row =>
         {
@@ -37,7 +50,7 @@ public class Day04 : Day
                     return 1;
                 return total*2;
             });
-            return (Id: id, Value: value);
+            return (Id: id, Value: value, scratched.Count(s => winning.Contains(s)));
         });
     }
 }
