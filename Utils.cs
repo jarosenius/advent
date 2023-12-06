@@ -68,6 +68,12 @@ namespace Advent
                 .Select(int.Parse)
                 .ToArray();
         }
+        public static long[] SplitByAndParseToLong(this string line, string split)
+        {
+            return line.Split(split, StringSplitOptions.RemoveEmptyEntries)
+                .Select(long.Parse)
+                .ToArray();
+        }
 
         public static T[][] CreateMapWithSize<T>(int width, int length)
         {
