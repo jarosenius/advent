@@ -64,14 +64,16 @@ namespace Advent
 
         public static int[] SplitByAndParseToInt(this string line, string split)
         {
-            return line.Split(split, StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
-                .ToArray();
+            return line.SplitByAndParse(split, int.Parse);
         }
         public static long[] SplitByAndParseToLong(this string line, string split)
         {
+            return line.SplitByAndParse(split, long.Parse);
+        }
+        public static T[] SplitByAndParse<T>(this string line, string split, Func<string, T> parse)
+        {
             return line.Split(split, StringSplitOptions.RemoveEmptyEntries)
-                .Select(long.Parse)
+                .Select(parse)
                 .ToArray();
         }
 
