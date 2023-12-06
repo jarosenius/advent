@@ -16,14 +16,17 @@ public class Day06 : Day
     public override object Part1(List<string> input)
     {
         var infos = GetInfo(input);
-        return infos.Aggregate(1L, (res, i) => res *= Enumerable.Range(0, i.Time+1).Count(l => IsRecord(i, l)));
+        return infos.Aggregate(1L, (res, i) => res *= CountNumberOfWays(i));
     }
 
     public override object Part2(List<string> input)
     {
-        return 0;
+        var time = int.Parse(input[0][5..].Replace(" ", ""));
+        var distance = long.Parse(input[1][9..].Replace(" ", ""));
+        return CountNumberOfWays(new Info(time, distance));
     }
 
+    private static int CountNumberOfWays(Info info) => Enumerable.Range(0, info.Time + 1).Count(l => IsRecord(info, l));
     private static bool IsRecord(Info info, long hold) => (info.Time - hold) * hold > info.Distance;
 
     private static IEnumerable<Info> GetInfo(List<string> input)
