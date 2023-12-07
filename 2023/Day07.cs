@@ -70,10 +70,6 @@ public class Day07 : Day
                 return GetTypeStrength([.. groups.First()], []);
 
             var twoBestGroups = groups.Take(2).ToArray();
-            if(twoBestGroups.Length != 2)
-            {
-                Console.WriteLine();
-            }
             return GetTypeStrength([.. twoBestGroups[0]], [.. twoBestGroups[1]]);
         }
 
