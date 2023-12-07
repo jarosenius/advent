@@ -23,12 +23,25 @@ public class Day06 : Day
     {
         var time = int.Parse(input[0][5..].Replace(" ", ""));
         var distance = long.Parse(input[1][9..].Replace(" ", ""));
-        return CountNumberOfWays(new Info(time, distance));
+        var info = new Info(time, distance);
+        return CountNumberOfWays(info);
     }
 
-    private static int CountNumberOfWays(Info info) => Enumerable.Range(0, info.Time + 1).Count(l => IsRecord(info, l));
-    private static bool IsRecord(Info info, long hold) => (info.Time - hold) * hold > info.Distance;
-
+    private static int CountNumberOfWays(Info info)
+    {
+        // travelTime = raceTime - buttonPressTime
+        // distanceTraveled = travelTime * buttonPressTime
+        // => distanceTraveled = (raceTime - buttonPressTime) * buttonPressTime
+        // => distanceTraveled = (raceTime * buttonPressTime) - buttonPressTime²
+        // => buttonPressTime² - (raceTime * buttonPressTime) + distanceTraveled = 0
+        // ax² + bx + c = 0 => x = (-b ± sqrt(b² - 4ac)) / 2a
+        
+        var sqrt = Math.Sqrt(Math.Pow(info.Time, 2) - 4 * info.Distance);
+        var x1 = (info.Time + sqrt) / 2;
+        var x2 = (info.Time - sqrt) / 2;
+        return (int)(Math.Ceiling(x1) - Math.Floor(x2) - 1);
+    }
+        
     private static IEnumerable<Info> GetInfo(List<string> input)
     {
         var time = Regex.Matches(input[0], @"\d+").Select(m => int.Parse(m.Value));
@@ -38,4 +51,3 @@ public class Day06 : Day
 
     private record Info(int Time, long Distance);
 }
-
