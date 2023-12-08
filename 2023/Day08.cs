@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Advent.y2023;
 
 [AoC(2023)]
-public class Day08 : Day
+public sealed class Day08 : Day
 {
     public Day08() : base(8, 2023)
     {
@@ -14,37 +15,37 @@ public class Day08 : Day
 
     public override object Part1(List<string> input)
     {
-        return GetSteps(input);
+        return GetSteps(input, "AAA", "ZZZ");
     }
     public override object Part2(List<string> input)
     {
-        return 0;
+        return GetSteps(input, "..A", "..Z");
     }
 
-    private static int GetSteps(List<string> input)
+    private static long GetSteps(List<string> input, string start, string target)
     {
         var order = input[0];
         var map = input.Skip(2).Select(i =>{
-            var parts = i.Split(" = ");
-            var leftRight = parts[1].Split(", ");
-            var kvp = new KeyValuePair<string, (string Left, string Right)>(parts[0], (leftRight[0][1..], leftRight[1][..^1]));
-            return kvp;
+            var parts = Regex.Matches(i, @"\w+");
+            return KeyValuePair.Create(parts[0].Value, (Left: parts[1].Value, Right: parts[2].Value));
         }).ToDictionary();
 
+        return map.Keys.Aggregate(1L, (steps, key) => Regex.IsMatch(key, start) ? GetSteps(steps, key) : steps);
 
-        var count = 0;
-        var current = "AAA";
-        do
+        long GetSteps(long steps, string key) {
+            var count = 0;
+            while (!Regex.IsMatch(key, target)) {
+                var step = order[count++ % order.Length];
+                key = GetTarget(step, key);
+            }
+            return steps.LeastCommonMultiple(count);
+        }
+
+        string GetTarget(char c, string key) => c switch
         {
-            var step = order[count++%order.Length];
-            current = step switch
-            {
-                'R' => map[current].Right,
-                'L' => map[current].Left,
-                _ => throw new ArgumentException("Invalid input"),
-            };
-        } while (current != "ZZZ");
-        
-        return count;
+            'R' => map[key].Right,
+            'L' => map[key].Left,
+            _ => throw new ArgumentException("Invalid input"),
+        };
     }
 }
