@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Advent
@@ -163,5 +162,8 @@ namespace Advent
                 && XPos <= n.XPos + n.Content.Length
                 && n.XPos <= XPos + Content.Length;
         }
+        
+        public static long GreatestCommonFactor(this long a, long b) => b == 0 ? a : b.GreatestCommonFactor(a % b);
+        public static long LeastCommonMultiple(this long a, long b) => a * b / a.GreatestCommonFactor(b);
     }
 }
