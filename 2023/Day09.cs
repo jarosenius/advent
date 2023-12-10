@@ -25,7 +25,7 @@ public class Day09 : Day
     static long CalculateRightSide(IEnumerable<long> list) =>
         list.Any() ? CalculateRightSide(list.DiffEveryOther()) + list.Last() : 0;
 
-    long CalculateLeftSide(IEnumerable<long> list) =>
-       CalculateRightSide(list.Reverse().ToArray());
+    static long CalculateLeftSide(IEnumerable<long> list) =>
+       CalculateRightSide(list.Reverse());
 }
 
