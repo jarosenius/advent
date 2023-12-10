@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Advent.y2023;
 
@@ -28,10 +30,28 @@ public class Day10 : Day
         var map = CreateMap(input);
         var connections = NavigateMap(map);
         map = KeepOnlyConnections(map, connections);
-        map = Expand(map);
-        map = FloodFill(map);
+        var resMap = RemoveUTurnsAndSimplify(map);
 
-        return map.Values.Count(v => v == '#');
+        return resMap.Aggregate(0, (sum, row) =>
+        {
+            return row.Aggregate((Parity: 0, Sum: sum), (data, c) => 
+            {
+                if (c == '│') data.Parity++;
+                if (c == ' ' && data.Parity % 2 == 1) data.Sum++;
+                return data;
+            }).Sum;
+        });
+    }
+
+    private static List<string> RemoveUTurnsAndSimplify(Dictionary<Coordinate, char> map)
+    {
+        return map.GroupBy(m => m.Key.Y).Select(row =>
+        {
+            var sb = new StringBuilder();
+            row.OrderBy(r => r.Key.X).ForEach(c => sb.Append(c.Value));
+            var removeUTurns = Regex.Replace(sb.ToString(), "┌─*┐|└─*┘", string.Empty);
+            return Regex.Replace(removeUTurns, "└─*┐|┌─*┘", "│");
+        }).ToList();
     }
 
     static Dictionary<Coordinate, char> CreateMap(List<string> input)
@@ -68,43 +88,6 @@ public class Day10 : Day
         return positions;
     }
 
-    private static Dictionary<Coordinate, char> Expand(Dictionary<Coordinate, char> map)
-    {
-        return map.Keys.SelectMany(k => 
-            Expand(map[new(k.X, k.Y)])
-            .SelectMany((s, y) => 
-                    s.Select((c, x) => KeyValuePair.Create<Coordinate, char>(new(s.Length*k.X+x, s.Length*k.Y+y), c)))
-            ).ToDictionary();
-
-        static string[] Expand(char c) => c switch
-        {
-            '│' => [".│.", 
-                    ".│.", 
-                    ".│."],
-            '─' => ["...", 
-                    "───", 
-                    "..."],
-            '└' => [".│.", 
-                    ".└─", 
-                    "..."],
-            '┘' => [".│.", 
-                    "─┘.", 
-                    "..."],
-            '┐' => ["...", 
-                    "─┐.", 
-                    ".│."],
-            '┌' => ["...", 
-                    ".┌─", 
-                    ".│."],
-            'S' => [".│.", 
-                    "─S─", 
-                    ".│."],
-            _ => ["...", 
-                 $".{c}.", 
-                  "..."], 
-        };
-    }
-
     private static List<Coordinate> InverseConnectionTo(char c)
     {
         return ConnectionsTo(c).Select(coordinate => -coordinate).ToList();
@@ -123,7 +106,7 @@ public class Day10 : Day
     
     private static Dictionary<Coordinate, char> KeepOnlyConnections(Dictionary<Coordinate, char> map, HashSet<Coordinate> connections)
     {
-        return map.Keys.ToDictionary(kvp => kvp, kvp => connections.Contains(kvp) ? map[kvp] : '#');
+        return map.Keys.ToDictionary(kvp => kvp, kvp => connections.Contains(kvp) ? map[kvp] : ' ');
     }
 
     private static void DrawMap(Dictionary<Coordinate, char> map)
@@ -140,28 +123,6 @@ public class Day10 : Day
             }
             Console.WriteLine();
         }
-    }
-
-    private static Dictionary<Coordinate, char> FloodFill(Dictionary<Coordinate, char> map)
-    {
-        var queue = new Queue<Coordinate>();
-        queue.Enqueue(new Coordinate(0, 0));
-        var visited = new HashSet<Coordinate>();
-        var fill = new[]{'.', '#'};
-        while(queue.TryDequeue(out var pos))
-        {
-            visited.Add(pos);
-            if(!fill.Contains(map[pos]))
-                continue;
-            map[pos] = ' ';
-            Directions.ForEach(d => 
-            {
-                var p = pos+d;
-                if(map.ContainsKey(p) && !visited.Contains(p))
-                    queue.Enqueue(p);
-            });
-        }
-        return map;
     }
 
     private record Coordinate(int X, int Y){
