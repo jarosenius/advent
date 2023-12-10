@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,20 +25,17 @@ public class Day10 : Day
     }
     public override object Part2(List<string> input)
     {
-        return 0;
+        var map = CreateMap(input);
+        var connections = NavigateMap(map);
+        map = KeepOnlyConnections(map, connections);
+        map = Expand(map);
+        map = FloodFill(map);
+        return map.Values.Count(v => v == '#');
     }
 
     static Dictionary<Coordinate, char> CreateMap(List<string> input)
     {
-        var map = new Dictionary<Coordinate, char>();
-        for (int row = 0; row < input.Count; row++)
-        {
-            for (int col = 0; col < input[0].Length; col++)
-            {
-                map[new Coordinate(col, row)] = input[row][col];
-            }
-        }
-        return map;
+        return input.SelectMany((row, y) => row.Select((c, x) => KeyValuePair.Create<Coordinate, char>(new (x, y), c))).ToDictionary();
     }
 
     static HashSet<Coordinate> NavigateMap(Dictionary<Coordinate, char> map)
@@ -58,6 +56,43 @@ public class Day10 : Day
         return positions;
     }
 
+    private static Dictionary<Coordinate, char> Expand(Dictionary<Coordinate, char> map)
+    {
+        return map.Keys.SelectMany(k => 
+            Expand(map[new(k.X, k.Y)])
+            .SelectMany((s, y) => 
+                    s.Select((c, x) => KeyValuePair.Create<Coordinate, char>(new(s.Length*k.X+x, s.Length*k.Y+y), c)))
+            ).ToDictionary();
+
+        static string[] Expand(char c) => c switch
+        {
+            '|' => [".|.", 
+                    ".|.", 
+                    ".|."],
+            '-' => ["...", 
+                    "---", 
+                    "..."],
+            'L' => [".|.", 
+                    ".L-", 
+                    "..."],
+            'J' => [".|.", 
+                    "-J.", 
+                    "..."],
+            '7' => ["...", 
+                    "-7.", 
+                    ".|."],
+            'F' => ["...", 
+                    ".F-", 
+                    ".|."],
+            'S' => [".|.", 
+                    "-S-", 
+                    ".|."],
+            _ => ["...", 
+                 $".{c}.", 
+                  "..."], 
+        };
+    }
+
     private static List<Coordinate> InverseConnectionTo(char c)
     {
         return ConnectionsTo(c).Select(coordinate => -coordinate).ToList();
@@ -73,6 +108,49 @@ public class Day10 : Day
         'S' => Directions,
         _ => []
     };
+    
+    private static Dictionary<Coordinate, char> KeepOnlyConnections(Dictionary<Coordinate, char> map, HashSet<Coordinate> connections)
+    {
+        return map.Keys.ToDictionary(kvp => kvp, kvp => connections.Contains(kvp) ? map[kvp] : '#');
+    }
+
+    private static void DrawMap(Dictionary<Coordinate, char> map)
+    {
+        Console.WriteLine("-----------");
+        var rows = map.Keys.Max(coordinate => coordinate.Y);
+        var cols = map.Keys.Max(coordinate => coordinate.X);
+
+        for (var y = 0; y <= rows; y++)
+        {
+            for (var x = 0; x <= cols; x++)
+            {
+                Console.Write(map[new(x, y)]);
+            }
+            Console.WriteLine();
+        }
+    }
+
+    private static Dictionary<Coordinate, char> FloodFill(Dictionary<Coordinate, char> map)
+    {
+        var queue = new Queue<Coordinate>();
+        queue.Enqueue(new Coordinate(0, 0));
+        var visited = new HashSet<Coordinate>();
+        var fill = new[]{'.', '#'};
+        while(queue.TryDequeue(out var pos))
+        {
+            visited.Add(pos);
+            if(!fill.Contains(map[pos]))
+                continue;
+            map[pos] = 'x';
+            Directions.ForEach(d => 
+            {
+                var p = pos+d;
+                if(map.ContainsKey(p) && !visited.Contains(p))
+                    queue.Enqueue(p);
+            });
+        }
+        return map;
+    }
 
     private record Coordinate(int X, int Y){
         public static Coordinate operator +(Coordinate a, Coordinate b) => new(a.X+b.X, a.Y+b.Y);
