@@ -30,12 +30,24 @@ public class Day10 : Day
         map = KeepOnlyConnections(map, connections);
         map = Expand(map);
         map = FloodFill(map);
+
         return map.Values.Count(v => v == '#');
     }
 
     static Dictionary<Coordinate, char> CreateMap(List<string> input)
     {
-        return input.SelectMany((row, y) => row.Select((c, x) => KeyValuePair.Create<Coordinate, char>(new (x, y), c))).ToDictionary();
+        return input.SelectMany((row, y) => row.Select((c, x) => KeyValuePair.Create<Coordinate, char>(new (x, y), ReplaceWith(c)))).ToDictionary();
+
+        static char ReplaceWith(char c) => c switch {
+            '-' => '─',
+            '|' => '│',
+            'F' => '┌',
+            '7' => '┐',
+            'L' => '└',
+            'J' => '┘',
+            '.' => ' ',
+            _ => c,
+        };
     }
 
     static HashSet<Coordinate> NavigateMap(Dictionary<Coordinate, char> map)
@@ -66,27 +78,27 @@ public class Day10 : Day
 
         static string[] Expand(char c) => c switch
         {
-            '|' => [".|.", 
-                    ".|.", 
-                    ".|."],
-            '-' => ["...", 
-                    "---", 
+            '│' => [".│.", 
+                    ".│.", 
+                    ".│."],
+            '─' => ["...", 
+                    "───", 
                     "..."],
-            'L' => [".|.", 
-                    ".L-", 
+            '└' => [".│.", 
+                    ".└─", 
                     "..."],
-            'J' => [".|.", 
-                    "-J.", 
+            '┘' => [".│.", 
+                    "─┘.", 
                     "..."],
-            '7' => ["...", 
-                    "-7.", 
-                    ".|."],
-            'F' => ["...", 
-                    ".F-", 
-                    ".|."],
-            'S' => [".|.", 
-                    "-S-", 
-                    ".|."],
+            '┐' => ["...", 
+                    "─┐.", 
+                    ".│."],
+            '┌' => ["...", 
+                    ".┌─", 
+                    ".│."],
+            'S' => [".│.", 
+                    "─S─", 
+                    ".│."],
             _ => ["...", 
                  $".{c}.", 
                   "..."], 
@@ -99,12 +111,12 @@ public class Day10 : Day
     }
 
     private static List<Coordinate> ConnectionsTo(char c) => c switch {
-        '|' => [Up, Down],
-        '-' => [Left, Right],
-        'L' => [Up, Right],
-        'J' => [Up, Left],
-        '7' => [Left, Down],
-        'F' => [Right, Down],
+        '│' => [Up, Down],
+        '─' => [Left, Right],
+        '└' => [Up, Right],
+        '┘' => [Up, Left],
+        '┐' => [Left, Down],
+        '┌' => [Right, Down],
         'S' => Directions,
         _ => []
     };
@@ -141,7 +153,7 @@ public class Day10 : Day
             visited.Add(pos);
             if(!fill.Contains(map[pos]))
                 continue;
-            map[pos] = 'x';
+            map[pos] = ' ';
             Directions.ForEach(d => 
             {
                 var p = pos+d;
