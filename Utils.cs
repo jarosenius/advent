@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -165,5 +165,7 @@ namespace Advent
         
         public static long GreatestCommonFactor(this long a, long b) => b == 0 ? a : b.GreatestCommonFactor(a % b);
         public static long LeastCommonMultiple(this long a, long b) => a * b / a.GreatestCommonFactor(b);
+        public static long[] DiffEveryOther(this IEnumerable<long> list) =>
+            list.Zip(list.Skip(1)).Select(p => p.Second - p.First).ToArray();
     }
 }

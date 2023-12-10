@@ -13,11 +13,15 @@ public class Day09 : Day
 
     public override object Part1(List<string> input)
     {
-        return 0;
+        var list = input.Select(i => i.SplitByAndParse(" ", long.Parse));
+        return list.Select(i => Calculate(i)).Sum();
     }
     public override object Part2(List<string> input)
     {
         return 0;
     }
+
+    static long Calculate(IEnumerable<long> list) =>
+        list.Any() ? Calculate(list.DiffEveryOther()) + list.Last() : 0;
 }
 
