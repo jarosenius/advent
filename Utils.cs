@@ -37,6 +37,14 @@ namespace Advent
             }
         }
 
+        public static IEnumerable<T> SliceColumn<T>(this IEnumerable<IEnumerable<T>> list, int column)
+        {
+            for (var x = 0; x < list.Count(); x++)
+            {
+                yield return list.ElementAt(x).ElementAt(column);
+            }
+        }
+
         public static IEnumerable<int> ReadLinesAsInt(this IEnumerable<string> lines)
         {
             return lines.Select(n => int.Parse(n));
