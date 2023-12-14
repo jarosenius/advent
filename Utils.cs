@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -135,8 +135,9 @@ namespace Advent
             Func<T, bool> condition
         )
         {
-            var list = new List<T> { source.First() };
-            foreach (T item in source.Skip(1))
+            var toKeep = source.SkipWhile(i => !condition(i));
+            var list = new List<T> { toKeep.First() };
+            foreach (T item in toKeep.Skip(1))
             {
                 if (condition(item) == false)
                 {
