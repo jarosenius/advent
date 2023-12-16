@@ -4,6 +4,7 @@ using System.Linq;
 namespace Advent.Common;
 public record Coordinate(int X, int Y){
 
+    public static readonly Coordinate Zero = new (0, 0);
     public static readonly Coordinate Right = new (1, 0);
     public static readonly Coordinate Down = new(0, 1);
     public static readonly Coordinate Left = new(-1, 0);
