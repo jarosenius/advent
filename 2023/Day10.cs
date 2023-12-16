@@ -69,7 +69,7 @@ public class Day10 : Day
     {
         var pos = map.Keys.Single(k => map[k] == 'S');
         var positions = new HashSet<Coordinate>();
-        var direction = Coordinate.Directions.First(d => InverseConnectionTo(map[pos+d]).Contains(d));
+        var direction = Direction.Directions.First(d => InverseConnectionTo(map[pos+d]).Contains(d));
 
         do
         {
@@ -89,13 +89,13 @@ public class Day10 : Day
     }
 
     private static List<Coordinate> ConnectionsTo(char c) => c switch {
-        '│' => [Coordinate.Up, Coordinate.Down],
-        '─' => [Coordinate.Left, Coordinate.Right],
-        '└' => [Coordinate.Up, Coordinate.Right],
-        '┘' => [Coordinate.Up, Coordinate.Left],
-        '┐' => [Coordinate.Left, Coordinate.Down],
-        '┌' => [Coordinate.Right, Coordinate.Down],
-        'S' => [.. Coordinate.Directions],
+        '│' => [Direction.Up, Direction.Down],
+        '─' => [Direction.Left, Direction.Right],
+        '└' => [Direction.Up, Direction.Right],
+        '┘' => [Direction.Up, Direction.Left],
+        '┐' => [Direction.Left, Direction.Down],
+        '┌' => [Direction.Right, Direction.Down],
+        'S' => [.. Direction.Directions],
         _ => []
     };
     

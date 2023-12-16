@@ -11,7 +11,7 @@ public class Day16 : Day
 
     }
 
-    public override object Part1(List<string> input) => FloodCells(Coordinate.CreateMap(input), new(Coordinate.Zero, Coordinate.Right));
+    public override object Part1(List<string> input) => FloodCells(Coordinate.CreateMap(input), new(Coordinate.Zero, Direction.Right));
     public override object Part2(List<string> input)
     {
         var map = Coordinate.CreateMap(input);
@@ -22,10 +22,10 @@ public class Day16 : Day
     {
         var bottomRight = map.Keys.MaxBy(c => c.X + c.Y);
         return map.Keys.Where(c => c.Y == bottomRight.Y)
-            .Select(c => new Beam(c, Coordinate.Up))
-            .Concat(map.Keys.Where(c => c.X == bottomRight.X).Select(c => new Beam(c, Coordinate.Left)))
-            .Concat(map.Keys.Where(c => c.Y == 0).Select(c => new Beam(c, Coordinate.Down)))
-            .Concat(map.Keys.Where(c => c.X == 0).Select(c => new Beam(c, Coordinate.Right)));
+            .Select(c => new Beam(c, Direction.Up))
+            .Concat(map.Keys.Where(c => c.X == bottomRight.X).Select(c => new Beam(c, Direction.Left)))
+            .Concat(map.Keys.Where(c => c.Y == 0).Select(c => new Beam(c, Direction.Down)))
+            .Concat(map.Keys.Where(c => c.X == 0).Select(c => new Beam(c, Direction.Right)));
     }
 
     private static int FloodCells(Dictionary<Coordinate, char> map, Beam beam) 
@@ -36,12 +36,13 @@ public class Day16 : Day
         do
         {
             visited.Add(beam);
-            foreach (var newBeam in from dir in GetDirections(map[beam.Position], beam.Direction)
-                                    let newBeam = new Beam(beam.Position + dir, dir)
-                                    where map.ContainsKey(newBeam.Position) && !visited.Contains(newBeam)
-                                    select newBeam)
+            foreach (var dir in GetDirections(map[beam.Position], beam.Direction))
             {
-                queue.Enqueue(newBeam);
+                var newBeam = new Beam(beam.Position + dir, dir);
+                if (map.ContainsKey(newBeam.Position) && !visited.Contains(newBeam))
+                {
+                    queue.Enqueue(newBeam);
+                }
             }
         }
         while (queue.TryDequeue(out beam));
@@ -51,8 +52,8 @@ public class Day16 : Day
 
     private static IEnumerable<Coordinate> GetDirections(char c, Coordinate direction) => c switch 
     {
-        '|' when Coordinate.RightLeft.Contains(direction) => Coordinate.UpDown,
-        '-' when Coordinate.UpDown.Contains(direction) => Coordinate.RightLeft,
+        '|' when Direction.RightLeft.Contains(direction) => Direction.UpDown,
+        '-' when Direction.UpDown.Contains(direction) => Direction.RightLeft,
         '\\' => [new Coordinate(direction.Y, direction.X)],
         '/' => [-new Coordinate(direction.Y, direction.X)],
         _ => [direction]
