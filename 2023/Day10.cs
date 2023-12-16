@@ -95,7 +95,7 @@ public class Day10 : Day
         '┘' => [Coordinate.Up, Coordinate.Left],
         '┐' => [Coordinate.Left, Coordinate.Down],
         '┌' => [Coordinate.Right, Coordinate.Down],
-        'S' => Coordinate.Directions,
+        'S' => [.. Coordinate.Directions],
         _ => []
     };
     

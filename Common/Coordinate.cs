@@ -13,8 +13,10 @@ public record Coordinate(int X, int Y){
     public static readonly Coordinate TopRight = new(1, -1);
     public static readonly Coordinate BottomRight = new(1, 1);
     public static readonly Coordinate BottomLeft = new(-1, 1);
-    public static readonly List<Coordinate> Directions = [Right, Down, Left, Up];
-    public static readonly List<Coordinate> DirectionsWithDiagonals = [Up, TopRight, Right, BottomRight, Down, BottomLeft, Left, TopLeft];
+    public static readonly IReadOnlyList<Coordinate> Directions = [Right, Down, Left, Up];
+    public static readonly IReadOnlyList<Coordinate> UpDown = [Up, Down];
+    public static readonly IReadOnlyList<Coordinate> RightLeft = [Right, Left];
+    public static readonly IReadOnlyList<Coordinate> DirectionsWithDiagonals = [Up, TopRight, Right, BottomRight, Down, BottomLeft, Left, TopLeft];
     public static Dictionary<Coordinate, char> CreateMap(List<string> input) => input.SelectMany((row, y) => row.Select((c, x) => KeyValuePair.Create(new Coordinate(x, y), c))).ToDictionary();
 
     public static Coordinate operator +(Coordinate a, Coordinate b) => new(a.X+b.X, a.Y+b.Y);
