@@ -1,12 +1,8 @@
 using System.Linq;
-
+using Advent.Http;
 namespace Advent.y2022;
 
 [AoC(2022)]
-public class Advent2022 : Advent
+public class Advent2022(AocClient client) : Advent(2022, client)
 {
-    public Advent2022() : base(2022)
-    {
-
-    }
 }

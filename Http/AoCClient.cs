@@ -25,8 +25,8 @@ public class AocClient
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            throw;
+            Console.WriteLine($"Failed to download input for {year}/{day}: {e.Message}");
         }
+        return string.Empty;
     }
 }

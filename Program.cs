@@ -42,6 +42,7 @@ namespace Advent
         {
             Advent a = null;
             var config = new ConfigurationBuilder().AddEnvironmentVariables().AddUserSecrets<Program>().Build();
+
             
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async options => 
             {
@@ -59,7 +60,8 @@ namespace Advent
                 else
                 {
                     Console.WriteLine($"Options: UseExample = {options.UseExample}, Year = {options.Year}, Day = {options.Day}");
-                    a = Advent.CreateForYear(options.Year);
+                    var client = new AocClient(config["AOC_TOKEN"]);
+                    a = Advent.CreateForYear(options.Year, client);
                     if (a == null)
                     {
                         Console.WriteLine($"Could not create an AoC. Supported years are {string.Join(", ", Advent.SupportedYears.Select(s => s.Key))}");
@@ -74,19 +76,14 @@ namespace Advent
 
                     if(options.FetchInput)
                     {
+                        
                         if(a.YEAR > DateTime.Now.Year || a.YEAR < 2015)
                             throw new ArgumentException("Cannot fetch input for games that do not exist");
                         var daysToFetch = options.Day is >=1 and <=25 ? [options.Day] : a.Days.Select(d => d.Key);
                         if(a.YEAR == DateTime.Now.Year)
                             daysToFetch = daysToFetch.TakeWhile(d => d <= DateTime.Now.Day);
 
-                        var client = new AocClient(config["AOC_TOKEN"]);
-                        var basePath = SetupPaths(options.Year);
-                        foreach (var day in daysToFetch)
-                        {
-                            await FetchInputForDayAsync(a.YEAR, day, basePath, client);
-                        }
-
+                        await Utils.FetchInputForDayAsync(a.YEAR, daysToFetch, client);
                     }
 
                     if (!daysToRun.All(d => a.HasDay(d)))
@@ -99,16 +96,6 @@ namespace Advent
             });
 
             a?.PresentAll();
-        }
-
-        private static async Task FetchInputForDayAsync(int year, int day, string basePath, AocClient client)
-        {
-            var d = day.ToString().PadLeft(2, '0');
-            var inputPath = $"{basePath}/input/{d}.txt";
-            var input = await client.FetchInputAsync(year, day);
-            input = input.TrimEnd();
-            await File.WriteAllTextAsync(inputPath, input, Encoding.Default, CancellationToken.None);
-            Console.WriteLine($"Saved input for day {d} to {inputPath}");
         }
 
         private static string SetupPaths(int year)
@@ -142,7 +129,7 @@ namespace Advent
             await Parallel.ForEachAsync(Enumerable.Range(1, 25), async (d, c) => await SetupDayForYear(year, d, dayTemplate, basePath, c));
 
             var advent = await File.ReadAllTextAsync($"{TemplatePath}/Advent202x.txt", Encoding.Default);
-            advent = advent.Replace("202x", year.ToString()).Replace(" base(2020)", $" base({year})").Replace("[AoC(2020)]", $"[AoC({year})]");
+            advent = advent.Replace("202x", year.ToString()).Replace(" base(2020, client)", $" base({year}, client)").Replace("[AoC(2020)]", $"[AoC({year})]");
             await File.WriteAllTextAsync($"{basePath}/Advent{year}.cs", advent, Encoding.Default);
 
             Console.WriteLine($"Finished setting up year {year}.");

@@ -1,10 +1,9 @@
+using Advent.Http;
+
 namespace Advent.y202x;
 
 [AoC(2020)]
-public class Advent202x : Advent
+public class Advent202x(AocClient client) : Advent(2020, client)
 {
-    public Advent202x() : base(2020)
-    {
-
-    }
 }
+

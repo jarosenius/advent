@@ -1,7 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Advent.Http;
 
 namespace Advent
 {
@@ -176,5 +181,22 @@ namespace Advent
         public static long LeastCommonMultiple(this long a, long b) => a * b / a.GreatestCommonFactor(b);
         public static long[] DiffEveryOther(this IEnumerable<long> list) =>
             list.Zip(list.Skip(1)).Select(p => p.Second - p.First).ToArray();
+
+        public static async Task FetchInputForDayAsync(int year, IEnumerable<int> daysToFetch, AocClient client)
+        {
+            foreach (var day in daysToFetch)
+            {
+                await FetchInputForDayAsync(year, day, client);
+            }
+        }
+
+        public static async Task FetchInputForDayAsync(int year, int day, AocClient client)
+        {
+            var path = GetInputForDay(day, year);
+            var input = await client.FetchInputAsync(year, day);
+            input = input.TrimEnd();
+            await File.WriteAllTextAsync(path, input, Encoding.Default, CancellationToken.None);
+            Console.WriteLine($"Saved input for day {day} to {path}");
+        }
     }
 }
