@@ -128,8 +128,8 @@ namespace Advent
             var dayTemplate = await File.ReadAllTextAsync(Path.Combine(TemplatePath, "Day.txt"));
             await Parallel.ForEachAsync(Enumerable.Range(1, 25), async (d, c) => await SetupDayForYear(year, d, dayTemplate, basePath, c));
 
-            var advent = await File.ReadAllTextAsync($"{TemplatePath}/Advent202x.txt", Encoding.Default);
-            advent = advent.Replace("202x", year.ToString()).Replace(" base(2020, client)", $" base({year}, client)").Replace("[AoC(2020)]", $"[AoC({year})]");
+            var advent = await File.ReadAllTextAsync($"{TemplatePath}/Advent.txt", Encoding.Default);
+            advent = advent.Replace("__YEAR__", $"{year}");
             await File.WriteAllTextAsync($"{basePath}/Advent{year}.cs", advent, Encoding.Default);
 
             Console.WriteLine($"Finished setting up year {year}.");
@@ -141,10 +141,9 @@ namespace Advent
 
             var day = d.ToString().PadLeft(2, '0');
             var content = dayTemplate
-                .Replace("Advent.y202x", $"Advent.y{year}")
-                .Replace("1, 2021)", $"{d}, {year})")
-                .Replace("(2021)", $"({year})")
-                .Replace("DayXY", $"Day{day}");
+                .Replace("__YEAR__", $"{year}")
+                .Replace("__DAY__", $"{d}")
+                .Replace("__DAYPAD__", $"{day}");
             var name = new FileInfo(day).Name;
             var newPath = $"{basePath}/Day{name}.cs";
 

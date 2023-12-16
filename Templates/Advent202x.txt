@@ -1,9 +1,0 @@
-using Advent.Http;
-
-namespace Advent.y202x;
-
-[AoC(2020)]
-public class Advent202x(AocClient client) : Advent(2020, client)
-{
-}
-

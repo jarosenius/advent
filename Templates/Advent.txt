@@ -1,0 +1,9 @@
+using Advent.Http;
+
+namespace Advent.y__YEAR__;
+
+[AoC(__YEAR__)]
+public class Advent__YEAR__(AocClient client) : Advent(__YEAR__, client)
+{
+}
+

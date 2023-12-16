@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using Advent.Common;
 
-namespace Advent.y202x;
+namespace Advent.y__YEAR__;
 
-[AoC(2021)]
-public class DayXY : Day
+[AoC(__YEAR__)]
+public class Day__DAYPAD__ : Day
 {
-    public DayXY() : base(1, 2021)
+    public Day__DAYPAD__() : base(__DAY__, __YEAR__)
     {
 
     }
