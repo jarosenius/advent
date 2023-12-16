@@ -41,7 +41,7 @@ namespace Advent
             ResultPart2 = Part2(example ? ExampleInput.ToList() : Input.ToList());
             sw.Stop();
             TimeToExecutePart2 = sw.Elapsed;
-            HasSolution = ((long.TryParse(ResultPart1.ToString(), out var res1) && res1 != 0) || ResultPart1 != null) || ((long.TryParse(ResultPart2.ToString(), out var res2) && res2 != 0) || ResultPart2 != null);
+            HasSolution = ResultPart1 != null && long.TryParse(ResultPart1.ToString(), out var res1) && res1 != 0 || ResultPart2 != null && long.TryParse(ResultPart2.ToString(), out var res2) && res2 != 0;
             return (ResultPart1, TimeToExecutePart1.TotalMilliseconds, ResultPart2, TimeToExecutePart2.TotalMilliseconds);
         }
 

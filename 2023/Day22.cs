@@ -13,11 +13,11 @@ public class Day22 : Day
 
     public override object Part1(List<string> input)
     {
-        return 0;
+        return null;
     }
     public override object Part2(List<string> input)
     {
-        return 0;
+        return null;
     }
 }
 
