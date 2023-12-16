@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Advent.Common;
 
 namespace Advent.y2023;
 
 [AoC(2023)]
 public class Day10 : Day
 {
-    static readonly Coordinate Right = new (1, 0);
-    static readonly Coordinate Down = new(0, 1);
-    static readonly Coordinate Left = new(-1, 0);
-    static readonly Coordinate Up = new(0, -1);
-    static readonly List<Coordinate> Directions = [Right, Down, Left, Up];
-
     public Day10() : base(10, 2023)
     {
 
@@ -74,7 +69,7 @@ public class Day10 : Day
     {
         var pos = map.Keys.Single(k => map[k] == 'S');
         var positions = new HashSet<Coordinate>();
-        var direction = Directions.First(d => InverseConnectionTo(map[pos+d]).Contains(d));
+        var direction = Coordinate.Directions.First(d => InverseConnectionTo(map[pos+d]).Contains(d));
 
         do
         {
@@ -94,13 +89,13 @@ public class Day10 : Day
     }
 
     private static List<Coordinate> ConnectionsTo(char c) => c switch {
-        '│' => [Up, Down],
-        '─' => [Left, Right],
-        '└' => [Up, Right],
-        '┘' => [Up, Left],
-        '┐' => [Left, Down],
-        '┌' => [Right, Down],
-        'S' => Directions,
+        '│' => [Coordinate.Up, Coordinate.Down],
+        '─' => [Coordinate.Left, Coordinate.Right],
+        '└' => [Coordinate.Up, Coordinate.Right],
+        '┘' => [Coordinate.Up, Coordinate.Left],
+        '┐' => [Coordinate.Left, Coordinate.Down],
+        '┌' => [Coordinate.Right, Coordinate.Down],
+        'S' => Coordinate.Directions,
         _ => []
     };
     
@@ -124,10 +119,5 @@ public class Day10 : Day
             Console.WriteLine();
         }
     }
-
-    private record Coordinate(int X, int Y){
-        public static Coordinate operator +(Coordinate a, Coordinate b) => new(a.X+b.X, a.Y+b.Y);
-        public static Coordinate operator -(Coordinate a) => new(-a.X, -a.Y);
-    };
 }
 
