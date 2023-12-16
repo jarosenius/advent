@@ -43,10 +43,5 @@ public class Day15 : Day
         return map;
     }
 
-    private static int Hash(string str) => str.Aggregate(0, (value, c) => {
-            value += c;
-            value *= 17;
-            value %= 256;
-            return value;
-    });    
+    private static int Hash(string str) => str.Aggregate(0, (value, c) => (value + c) * 17 % 256);
 }
