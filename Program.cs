@@ -32,9 +32,6 @@ namespace Advent
 
             [Option('c', "createDay", Required = false, Default = false, HelpText = "Set to true generate files for today.")]
             public bool CreateDay { get; set; } = false;
-
-            [Option('f', "fetchInput", Required = false, Default = false, HelpText = "Fetch the input for the specified day. The environment variable 'AOC_TOKEN' have to be set.")]
-            public bool FetchInput { get; set; } = false;
         }
 
 
@@ -73,18 +70,6 @@ namespace Advent
                         daysToRun = a.Days.Select(d => d.Key).ToArray();
                     else if (options.Day > 0 && options.Day <= 25)
                         daysToRun = [options.Day];
-
-                    if(options.FetchInput)
-                    {
-                        
-                        if(a.YEAR > DateTime.Now.Year || a.YEAR < 2015)
-                            throw new ArgumentException("Cannot fetch input for games that do not exist");
-                        var daysToFetch = options.Day is >=1 and <=25 ? [options.Day] : a.Days.Select(d => d.Key);
-                        if(a.YEAR == DateTime.Now.Year)
-                            daysToFetch = daysToFetch.TakeWhile(d => d <= DateTime.Now.Day);
-
-                        await Utils.FetchInputForDayAsync(a.YEAR, daysToFetch, client);
-                    }
 
                     if (!daysToRun.All(d => a.HasDay(d)))
                     {
