@@ -149,7 +149,6 @@ namespace Advent
 
             await Task.WhenAll(
                 File.WriteAllTextAsync(newPath, content, Encoding.Default, c),
-                File.WriteAllTextAsync($"{inputPath}/{day}.txt", "", Encoding.Default, c),
                 File.WriteAllTextAsync($"{inputPath}/{day}_example.txt", "", Encoding.Default, c));
         }
     }

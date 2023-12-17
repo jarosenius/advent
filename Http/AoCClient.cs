@@ -19,7 +19,7 @@ public class AocClient
 
     public async Task<string> FetchInputAsync(int year, int day)
     {
-        if(!client.DefaultRequestHeaders.Any(h => h.Key == Cookie && h.Value.Contains($"{Session}")))
+        if(!client.DefaultRequestHeaders.Any(h => h.Key == Cookie && h.Value.First().Contains($"{Session}")))
         {
             Console.WriteLine("The http client has an emtpy token. Either the environment variable 'AOC_TOKEN' does not exist or the client was created incorrectly.");
             return string.Empty;

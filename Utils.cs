@@ -195,8 +195,11 @@ namespace Advent
             var path = GetInputForDay(day, year);
             var input = await client.FetchInputAsync(year, day);
             input = input.TrimEnd();
-            await File.WriteAllTextAsync(path, input, Encoding.Default, CancellationToken.None);
-            Console.WriteLine($"Saved input for day {day} to {path}");
+            if(input != string.Empty)
+            {
+                await File.WriteAllTextAsync(path, input, Encoding.Default, CancellationToken.None);
+                Console.WriteLine($"Saved input for day {day} to {path}");
+            }
         }
     }
 }
