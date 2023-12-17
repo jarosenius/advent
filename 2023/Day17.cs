@@ -11,17 +11,13 @@ public class Day17 : Day
     public Day17()
         : base(17, 2023) { }
 
-    public override object Part1(List<string> input) => CalculateHeatloss(Coordinate.CreateMap(input, int.Parse));
+    public override object Part1(List<string> input) => CalculateHeatloss(Coordinate.CreateMap(input, int.Parse), 3, _ => true);
 
-    public override object Part2(List<string> input)
-    {
-        return null;
-    }
+    public override object Part2(List<string> input) => CalculateHeatloss(Coordinate.CreateMap(input, int.Parse), 10, (Crucible c) => c.MovesInStraightLine > 3);
 
-    private static int CalculateHeatloss(Dictionary<Coordinate, int> map)
+    private static int CalculateHeatloss(Dictionary<Coordinate, int> map, int maxStraightMoves, Func<Crucible, bool> allowedToTurn)
     {
         var target = map.Keys.MaxBy(c => c.X + c.Y);
-
         var queue = new PriorityQueue<Crucible, int>();
 
         var visited = new HashSet<Crucible>();
@@ -33,7 +29,7 @@ public class Day17 : Day
         {
             if (crucible.Position == target)
                 return loss;
-            foreach (var district in GetNeighboringDistricts(crucible))
+            foreach (var district in GetNeighboringDistricts(crucible, maxStraightMoves, allowedToTurn))
             {
                 if(map.TryGetValue(district.Position, out int value) && !visited.Contains(district))
                 {
@@ -45,25 +41,28 @@ public class Day17 : Day
         return -1;
     }
 
-    private static List<Crucible> GetNeighboringDistricts(Crucible crucible)
+    private static List<Crucible> GetNeighboringDistricts(Crucible crucible, int maxStraightMoves, Func<Crucible, bool> allowedToTurn)
     {
         var districts = new List<Crucible>();
-        if(crucible.MovesInStraightLine < 3)
+        if(crucible.MovesInStraightLine < maxStraightMoves)
             districts.Add(crucible 
                 with {
                     Position = crucible.Position + crucible.Direction, 
                     MovesInStraightLine = crucible.MovesInStraightLine + 1 
                 });
 
-        GetNewDirections(crucible.Direction).ForEach(d =>
+        if(allowedToTurn(crucible))
         {
-            districts.Add(crucible 
-                with {
-                    Position = crucible.Position + d, 
-                    Direction = d,
-                    MovesInStraightLine = 1 
-                });
-        });
+            GetNewDirections(crucible.Direction).ForEach(d =>
+            {
+                districts.Add(crucible 
+                    with {
+                        Position = crucible.Position + d, 
+                        Direction = d,
+                        MovesInStraightLine = 1 
+                    });
+            });
+        }
 
         return districts;
     }
