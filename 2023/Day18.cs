@@ -13,92 +13,63 @@ public class Day18 : Day
 
     }
 
-    public override object Part1(List<string> input)
+    public override object Part1(List<string> input) => CountDepth(input.Select(i => DigInstruction.Create(i, false)).ToList());
+
+    public override object Part2(List<string> input) => CountDepth(input.Select(i => DigInstruction.Create(i, true)).ToList());
+
+    private static long CountDepth(List<DigInstruction> digPlan)
     {
-        var digPlan = input.Select(DigInstruction.Create).ToList();
-        var map = CreateMap(digPlan);
-        return CountDepth(map);
+        var corners = Corners(digPlan).ToList();
+
+        var shifted = corners.Skip(1).Append(corners[0]);
+        var zip = corners.Zip(shifted);
+        var x = zip.Select(p => (Math.Abs(p.Second.X - p.First.X + p.Second.Y - p.First.Y), (long)p.First.X * p.Second.Y - (long)p.First.Y * p.Second.X));
+        var border = Math.Abs(x.Sum(i => i.Item1));
+        var inside = (Math.Abs(x.Sum(i => i.Item2)) / 2) - border / 2 + 1;
+
+        return border + inside;
     }
 
-
-
-    public override object Part2(List<string> input)
+    private static HashSet<Coordinate> Corners(List<DigInstruction> instructions)
     {
-        return null;
-    }
-
-    private static HashSet<Coordinate> CreateMap(List<DigInstruction> digPlan)
-    {
-        var map = new HashSet<Coordinate>();
         var current = Coordinate.Zero;
-        digPlan.ForEach(instr => {
-            for (int i = 0; i < instr.Steps; i++)
-            {
-                map.Add(current += instr.Dir);
-            }
-        });
-        return map;
-    }
-
-    private static int CountDepth(HashSet<Coordinate> map)
-    {
-        var minX = map.Min(c => c.X);
-        var maxX = map.Max(c => c.X);
-        var minY = map.Min(c => c.Y);
-        var maxY = map.Max(c => c.Y);
-        var sum = 0;
-        for (int y = minY; y <= maxY; y++)
+        var list = new HashSet<Coordinate>();
+        foreach (var instr in instructions)
         {
-            var parity = 0;
-            for (int x = minX; x <= maxX; x++)
-            {
-                if(map.Contains(new(x, y)))
-                {
-                    var startConnectedTop = map.Contains(new(x, y-1));
-                    var startConnectedBottom = map.Contains(new(x, y+1));
-
-                    if(startConnectedTop && startConnectedBottom)
-                        parity++;
-
-                    sum++;
-                    var start = x;
-                    while(x+1 <= maxX && map.Contains(new(x+1, y)))
-                    {
-                        x++;
-                        sum++;
-                    }
-
-                    if(x - start > 0)
-                    {
-                        var endConnectedTop = map.Contains(new(x, y-1));
-                        var endConnectedBottom = map.Contains(new(x, y+1));
-
-                        if((startConnectedTop && endConnectedBottom) || (startConnectedBottom && endConnectedTop))
-                            parity++;
-                    }
-                }    
-                else if(parity % 2 == 1)
-                {
-                    sum++;
-                }
-            } 
+            list.Add(current = ApplyInstruction(current, instr));
         }
-        return sum;
+
+        return list;
+
+        static Coordinate ApplyInstruction(Coordinate current, DigInstruction instr)
+        {
+            if(instr.Dir == Direction.Right)
+                return new(current.X+instr.Steps, current.Y);
+            if(instr.Dir == Direction.Down)
+                return new(current.X, current.Y+instr.Steps);
+            if(instr.Dir == Direction.Left)
+                return new(current.X-instr.Steps, current.Y);
+            if(instr.Dir == Direction.Up)
+                return new(current.X, current.Y-instr.Steps);  
+            throw new ArgumentException("Not a valid instruction"); 
+        }
     }
 
     private record DigInstruction(Coordinate Dir, int Steps)
     {
-        public static DigInstruction Create(string input)
+        public static DigInstruction Create(string input, bool part2)
         {
             var parts = input.Split(" ");
-            var direction = parts[0][0] switch {
-                'R' => Direction.Right,
-                'U' => Direction.Up,
-                'L' => Direction.Left,
-                'D' => Direction.Down,
+            var d = part2 ? parts[2][7] : parts[0][0];
+            var direction = d switch {
+                'R' or '0' => Direction.Right,
+                'U' or '1' => Direction.Up,
+                'L' or '2' => Direction.Left,
+                'D' or '3' => Direction.Down,
                 _ => throw new ArgumentException($"'{input}' is not a valid line.")
             };
-            return new DigInstruction(direction, int.Parse(parts[1]));
+            var steps = part2 ? Convert.ToInt32(parts[2][2..7], 16) : int.Parse(parts[1]);
+            return new DigInstruction(direction, steps);
         }
     }
 }
