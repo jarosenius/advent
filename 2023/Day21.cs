@@ -16,31 +16,44 @@ public class Day21 : Day
     {
         var map = Coordinate.CreateMap(input);
         HashSet<Coordinate> plots = [map.Single(m => m.Value == 'S').Key];
-        for (int i = 0; i < 64; i++)
+        for (var i = 0; i < 64; i++)
         {
-            plots = plots.SelectMany(p => GetPossibleStepsFrom(p, map)).ToHashSet();
+            plots = plots.SelectMany(p => GetPossibleStepsFrom(p, map).Select(p1 => p1.Item1)).ToHashSet();
         }
         return plots.Count;
     }
     public override object Part2(List<string> input)
     {
-        return null;
+        var map = Coordinate.CreateMap(input);
+        var width = input.Count;
+        var totalSteps = 26501365;
+        var repetitions = totalSteps / width;
+        var remainingSteps = totalSteps % width;
+
+        HashSet<Coordinate> plots = [map.Single(m => m.Value == 'S').Key];
+        var perLoop = new List<(int Step, int Plots, int UniquePositions)>();
+
+        for(var x = 1; x <= width*2; x++)
+        {
+            var d = plots.SelectMany(p => GetPossibleStepsFrom(p, map, true, width));
+            var uniquePositionsOnMap = d.Select(p => p.Item2).ToHashSet();
+            plots = d.Select(p => p.Item1).ToHashSet();
+            perLoop.Add((x, plots.Count, uniquePositionsOnMap.Count));        
+        }
+
+        return 0;
     }
 
 
-    private static IEnumerable<Coordinate> GetPossibleStepsFrom(Coordinate current, Dictionary<Coordinate, char> map)
+    private static IEnumerable<(Coordinate, Coordinate)> GetPossibleStepsFrom(Coordinate current, Dictionary<Coordinate, char> map, bool loopAround = false, int mapWidth = -1)
     {
-        var up = current+Direction.Up;
-        var right = current+Direction.Right;
-        var down = current+Direction.Down;
-        var left = current+Direction.Left;
-        if(map.TryGetValue(up, out var uStep) && uStep != '#')
-            yield return up;
-        if(map.TryGetValue(right, out var rStep) && rStep != '#')
-            yield return right;
-        if(map.TryGetValue(down, out var dStep) && dStep != '#')
-            yield return down;
-        if(map.TryGetValue(left, out var lStep) && lStep != '#')
-            yield return left;
+        foreach (var dir in Direction.Directions)
+        {
+            var newPos = current + dir;
+            if(loopAround)
+                newPos = newPos with {X = ((newPos.X % mapWidth) + mapWidth) % mapWidth, Y = ((newPos.Y % mapWidth) + mapWidth) % mapWidth};
+            if(map.TryGetValue(newPos, out var step) && step != '#')
+                yield return (current + dir, newPos);
+        }
     }
 }
