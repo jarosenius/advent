@@ -71,6 +71,10 @@ namespace Advent
                     else if (options.Day > 0 && options.Day <= 25)
                         daysToRun = [options.Day];
 
+                    if(options.Year == DateTime.Now.Year && DateTime.Now.Month == 12 && DateTime.Now.Day < 25)
+                        daysToRun = daysToRun.TakeWhile(d => d <= DateTime.Now.Day).ToArray();
+
+                    
                     if (!daysToRun.All(d => a.HasDay(d)))
                     {
                         Console.WriteLine("The solution for the given year does not contain all the days that were requested.");
