@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,7 +42,9 @@ public class Day01 : Day
 
     public override object Part2(List<string> input)
     {
-        return null;
+        var (left, right) = GetLists(input);
+        var lookup = new ConcurrentDictionary<int, int>();
+        return left.Sum(e => lookup.GetOrAdd(e, right.Count(r => r == e) * e));
     }
 }
 
