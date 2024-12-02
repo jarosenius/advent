@@ -21,30 +21,23 @@ public class Day01 : Day
         return Enumerable.Zip(left, right).Sum(p => Math.Abs(p.First - p.Second));
     }
 
-    private static (List<int> Left, List<int> Right) GetLists(List<string> input)
-    {
-        const string reg = @"(\d+)\s+(\d+)";
-        var regex = new Regex(reg, RegexOptions.Compiled);
-        var lists = input.Select(r =>
-        {
-            var match = regex.Match(r);
-            if (match.Success)
-            {
-                return (int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
-            }
-            return (0, 0);
-        });
-
-        var left = lists.Select(e => e.Item1).OrderBy(e => e).ToList();
-        var right = lists.Select(e => e.Item2).OrderBy(e => e).ToList();
-        return (left, right);
-    }
-
     public override object Part2(List<string> input)
     {
         var (left, right) = GetLists(input);
         var lookup = new ConcurrentDictionary<int, int>();
         return left.Sum(e => lookup.GetOrAdd(e, right.Count(r => r == e) * e));
+    }
+
+    private static (List<int> Left, List<int> Right) GetLists(List<string> input)
+    {
+        var lists = input.Select(r => {
+            var parts = r.Split("   ");
+            return (int.Parse(parts[0]), int.Parse(parts[1]));
+        });
+
+        var left = lists.Select(e => e.Item1).OrderBy(e => e).ToList();
+        var right = lists.Select(e => e.Item2).OrderBy(e => e).ToList();
+        return (left, right);
     }
 }
 
