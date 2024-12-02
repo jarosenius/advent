@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Advent.Common;
 
 namespace Advent.y2024;
 
@@ -15,28 +14,39 @@ public class Day02 : Day
 
     public override object Part1(List<string> input)
     {
-        var reports = GetReports(input);
-        return reports.Count(r => r.Item1.Zip(r.Item1.Skip(1)).All(p => IsValid(p.First, p.Second, r.Item2)));
+        var reports = input.Select(r => new Report(r.SplitByAndParseToInt(" "))).ToList();
+        return reports.Count(r => r.IsValid(false));
     }
 
     public override object Part2(List<string> input)
     {
-        return null;
+        var reports = input.Select(r => new Report(r.SplitByAndParseToInt(" "))).ToList();
+        return reports.Count(r => r.IsValid(true));
     }
 
-    private static List<(int[], bool)> GetReports(List<string> input)
+
+    private record Report(int[] Data)
     {
-        return input.Select(r =>
+        private readonly bool increasing = Data[1] > Data[0];
+        private readonly IEnumerable<(int First, int Second)> pairs = Data.Zip(Data.Skip(1));
+        public bool IsValid(bool dampen)
         {
-            var report = r.SplitByAndParseToInt(" ");
-            var increase = report[1] > report[0];
-            return (report, increase);
-        }).ToList();
-    }
+            if(!dampen)
+                return pairs.All(p => increasing ? 1 <= p.Second - p.First && p.Second - p.First <= 3 : 1 <= p.First - p.Second && p.First - p.Second <= 3);
+            
+            return Dampen().Any(r => r.IsValid(false));
+        }
 
-    private static bool IsValid(int a, int b, bool increase)
-    {
-        return increase ? b > a && b-a <=3 : a > b && a-b <=3;
+        private List<Report> Dampen()
+        {
+            var reports = new List<Report>();
+            for (int i = 0; i <= Data.Length; i++)
+            {
+                var data = Data.Take(i-1);
+                reports.Add(new Report(data.Concat(Data.Skip(i)).ToArray()));
+            }
+            return reports;
+        }
     }
 }
 
