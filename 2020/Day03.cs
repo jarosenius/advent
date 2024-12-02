@@ -6,16 +6,11 @@ using System.Threading.Tasks;
 
 namespace Advent.y2020
 {
-    public class Day03 : Day
+    [AoC(2020)]
+    public class Day03() : Day(3, 2020)
     {
-        public Day03() : base(3, 2020)
-        {
-
-        }
-
         public override object Part1(List<string> input)
         {
-
             return CountTrees(input, 3, 1); ;
         }
         public override object Part2(List<string> input)

@@ -14,6 +14,8 @@ Setup a new year with
 
 > --useExample, -e : Run the day(s) using example data.
 
+> --skipMissing, -x : Don't create days that haven't been created for a year.
+
 ## Examples
 
 Run all days for the latest supported year using real data.

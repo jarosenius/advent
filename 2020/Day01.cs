@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Advent.y2020
 {
+    [AoC(2020)]
     public class Day01 : Day
     {
         public Day01() : base(1, 2020)

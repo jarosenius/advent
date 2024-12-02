@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Advent.Common;
 
-namespace Advent.y__YEAR__;
+namespace Advent.y2022;
 
-[AoC(__YEAR__)]
-public class Day__DAYPAD__() : Day(__DAY__, __YEAR__)
+[AoC(2022)]
+public class Day24() : Day(24, 2022)
 {
     public override object Part1(List<string> input)
     {

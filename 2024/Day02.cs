@@ -5,13 +5,8 @@ using System.Linq;
 namespace Advent.y2024;
 
 [AoC(2024)]
-public class Day02 : Day
+public class Day02() : Day(2, 2024)
 {
-    public Day02() : base(2, 2024)
-    {
-
-    }
-
     public override object Part1(List<string> input)
     {
         var reports = input.Select(r => new Report(r.SplitByAndParseToInt(" "))).ToList();

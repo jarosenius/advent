@@ -8,13 +8,8 @@ using Advent.Common;
 namespace Advent.y2024;
 
 [AoC(2024)]
-public class Day01 : Day
+public class Day01() : Day(1, 2024)
 {
-    public Day01() : base(1, 2024)
-    {
-
-    }
-
     public override object Part1(List<string> input)
     {
         var (left, right) = GetLists(input);

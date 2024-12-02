@@ -7,7 +7,7 @@ using Advent.Http;
 
 namespace Advent
 {
-    public abstract class Advent
+    public abstract class Advent(int year, AocClient client)
     {
         private static Dictionary<int, Type> supportedYears;
         public static Dictionary<int, Type> SupportedYears
@@ -44,11 +44,13 @@ namespace Advent
                    select t;
         }
 
-        public static Advent CreateForYear(int year, AocClient client)
+        public static async Task<Advent> CreateForYear(int year, AocClient client)
         {
             if (SupportedYears.TryGetValue(year, out var advent))
             {
-                return (Advent)Activator.CreateInstance(advent, client);
+                var instance = (Advent)Activator.CreateInstance(advent, client);
+                await instance.SetupDays();
+                return instance; 
             }
             return null;
         }
@@ -58,37 +60,33 @@ namespace Advent
             return (Day)Activator.CreateInstance(t);
         }
 
-        public readonly int YEAR;
+        public readonly int YEAR = year;
         public bool IsFirstRun = true;
 
-
-        public Advent(int year, AocClient client)
+        public async Task SetupDays()
         {
-            YEAR = year;
-            GetDaysForYear(YEAR)
+            var days = GetDaysForYear(YEAR)
             .Select(CreateDay)
-            .ToList()
-            .ForEach(d => AddDay(d, client));
+            .Select(d => AddDay(d, client)).ToList();
+            await Task.WhenAll(days);
         }
 
         public Dictionary<int, Day> Days = [];
 
-        public void AddDay(Day day, AocClient aocClient)
+        public async Task AddDay(Day day, AocClient aocClient)
         {
             if (day.DAY <= 0 || day.DAY > 25 || YEAR != day.YEAR)
                 return;
             Days[day.DAY] = day;
             
-            if(YEAR <= DateTime.Now.Year && day.DAY <= DateTime.Now.Day)
+            if(YEAR < DateTime.Now.Year || (YEAR == DateTime.Now.Year && day.DAY <= DateTime.Now.Day))
             {
                 var inputPath = Utils.GetInputForDay(day.DAY, YEAR);
                 if(!File.Exists(inputPath))
                 {
-                    Utils.FetchInputForDayAsync(YEAR, day.DAY, aocClient).Wait();
+                    await Utils.FetchInputForDayAsync(YEAR, day.DAY, aocClient);
                 }
             }
-            
-
         }
 
         public bool HasDay(int day) => Days.ContainsKey(day);

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Advent
 {
-    public abstract class Day
+    public abstract class Day(int day, int year)
     {
-        public readonly int DAY = 0;
-        public readonly int YEAR = 0;
+        public readonly int DAY = day;
+        public readonly int YEAR = year;
 
         public string[] Input { get; private set; }
         public string[] ExampleInput { get; private set; }
@@ -21,11 +21,6 @@ namespace Advent
         public bool UsedExampleData { get; private set; }
         public bool HasSolution { get; private set; }
 
-        public Day(int day, int year)
-        {
-            DAY = day;
-            YEAR = year;
-        }
         public async Task<(object Part1Result, double Part1Ms, object Part2Result, double Part2Ms)> Solve(bool example)
         {
             UsedExampleData = example;

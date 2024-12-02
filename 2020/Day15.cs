@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Advent.y2020
 {
+    [AoC(2020)]
     public class Day15 : Day
     {
         private Dictionary<int, List<int>> previous = new Dictionary<int, List<int>>();

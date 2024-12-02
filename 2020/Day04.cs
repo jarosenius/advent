@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Advent.y2020
 {
-    public class Day04 : Day
+    [AoC(2020)]
+    public class Day04() : Day(4, 2020)
     {
-        public Day04() : base(4, 2020)
-        {
-
-        }
-
         public override object Part1(List<string> input)
         {
             var passports = new List<List<Tuple<string, string>>>();
