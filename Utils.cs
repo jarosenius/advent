@@ -74,6 +74,17 @@ namespace Advent
                 .ToArray();
         }
 
+        public static long[][] SplitByFirstThenBySecondAndParseToLong(
+            this string line,
+            string splitFirst,
+            string splitSecond
+        )
+        {
+            return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.SplitByAndParse(splitSecond, long.Parse))
+                .ToArray();
+        }
+
         public static int[] SplitByAndParseToInt(this string line, string split)
         {
             return line.SplitByAndParse(split, int.Parse);
