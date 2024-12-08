@@ -9,12 +9,9 @@ public class Day08() : Day(8, 2024)
 {
     public override object Part1(List<string> input) => CountUniqueAntinodes(Coordinate.CreateMap(input));
 
-    public override object Part2(List<string> input)
-    {
-        return null;
-    }
+    public override object Part2(List<string> input) => CountUniqueAntinodes(Coordinate.CreateMap(input), true);
 
-    private static int CountUniqueAntinodes(Dictionary<Coordinate, char> map)
+    private static int CountUniqueAntinodes(Dictionary<Coordinate, char> map, bool part2 = false)
     {
         var maxX = map.Max(kvp => kvp.Key.X);
         var maxY = map.Max(kvp => kvp.Key.Y);
@@ -45,10 +42,30 @@ public class Day08() : Day(8, 2024)
                     
                     var a1 = c1 - d;
                     var a2 = c2 + d;
-                    if(a1.X >= 0 && a1.X <= maxX && a1.Y >= 0 && a1.Y <= maxY)
-                        antinodes.Add(a1);
-                    if(a2.X >= 0 && a2.X <= maxX && a2.Y >= 0 && a2.Y <= maxY)
-                        antinodes.Add(a2);
+                    var added = false;
+                    
+                    do
+                    {
+                        added = false;
+                        if(a1.X >= 0 && a1.X <= maxX && a1.Y >= 0 && a1.Y <= maxY)
+                        {
+                            antinodes.Add(a1);
+                            added = true;
+                            a1 -= d;
+                        }
+                        if(a2.X >= 0 && a2.X <= maxX && a2.Y >= 0 && a2.Y <= maxY)
+                        {
+                            antinodes.Add(a2);
+                            added = true;  
+                            a2 += d;
+                        }
+                    }
+                    while(part2 && added);
+                    if(part2)
+                    {
+                        antinodes.Add(c1);
+                        antinodes.Add(c2);
+                    }
                 }
             }
         });
