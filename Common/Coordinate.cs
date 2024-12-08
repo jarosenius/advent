@@ -13,6 +13,7 @@ public record Coordinate(int X, int Y){
         .ToDictionary();
 
     public static Coordinate operator +(Coordinate a, Coordinate b) => new(a.X+b.X, a.Y+b.Y);
+    public static Coordinate operator -(Coordinate a, Coordinate b) => new(a.X-b.X, a.Y-b.Y);
     public static Coordinate operator -(Coordinate a) => new(-a.X, -a.Y);
 };
 
