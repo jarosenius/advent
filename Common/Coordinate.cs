@@ -12,6 +12,11 @@ public record Coordinate(int X, int Y){
             .Select((c, x) => KeyValuePair.Create(new Coordinate(x, y), parse(c.ToString()))))
         .ToDictionary();
 
+    public static Dictionary<Coordinate, T> CreateMap<T>(List<string> input, Func<char, T> parse) => input
+        .SelectMany((row, y) => row
+            .Select((c, x) => KeyValuePair.Create(new Coordinate(x, y), parse(c))))
+        .ToDictionary();
+
     public static Coordinate operator +(Coordinate a, Coordinate b) => new(a.X+b.X, a.Y+b.Y);
     public static Coordinate operator -(Coordinate a, Coordinate b) => new(a.X-b.X, a.Y-b.Y);
     public static Coordinate operator -(Coordinate a) => new(-a.X, -a.Y);
