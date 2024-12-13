@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Advent.Common;
 
 namespace Advent.y2024;
 
@@ -38,16 +39,10 @@ public class Day13() : Day(13, 2024)
 
     private record Machine((int X, int Y) A, (int X, int Y) B, (long X, long Y) Prize)
     {
-        // Linear Diophantine equation
         public long FindMinPresses(int tokenA, int tokenB)
         {
-            long minB = (Prize.Y * A.X - Prize.X * A.Y) / (B.Y * A.X - B.X * A.Y);
-            long minA = (Prize.X - B.X * minB) / A.X;
-
-            if (minA * A.X + minB * B.X == Prize.X && minA * A.Y + minB * B.Y == Prize.Y)
-                return (minA * tokenA) + (minB * tokenB);
-            else
-                return 0;
+            var (a, b) = LinearDiophantineEquations.Solve(A, B, Prize);
+            return (a == -1 || b == -1) ? 0 : (a * tokenA) + (b * tokenB);
         }
     }
 }
