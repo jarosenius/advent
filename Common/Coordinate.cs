@@ -24,6 +24,7 @@ public record Coordinate(int X, int Y){
 
 public static class Direction
 {
+    public static readonly Coordinate None = new (0, 0);
     public static readonly Coordinate Right = new (1, 0);
     public static readonly Coordinate Down = new(0, 1);
     public static readonly Coordinate Left = new(-1, 0);
@@ -36,4 +37,21 @@ public static class Direction
     public static readonly IReadOnlyList<Coordinate> UpDown = [Up, Down];
     public static readonly IReadOnlyList<Coordinate> RightLeft = [Right, Left];
     public static readonly IReadOnlyList<Coordinate> DirectionsWithDiagonals = [Up, UpRight, Right, DownRight, Down, DownLeft, Left, UpLeft];
+}
+
+public static class MapExtensions
+{
+    public static void Print<T>(this Dictionary<Coordinate, T> map)
+    {
+        for (int y = 0; y <= map.Max(m => m.Key.Y); y++)
+        {
+            for (int x = 0; x <= map.Max(m => m.Key.X); x++)
+            {
+                Console.Write(map[new Coordinate(x, y)]);
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public static Dictionary<Coordinate, char> CreateMap(this List<string> input) => Coordinate.CreateMap(input);
 }
