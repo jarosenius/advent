@@ -19,7 +19,7 @@ public class Day17() : Day(17, 2024)
     public override object Part2(List<string> input)
     {
         var program = input.ElementAt(4).Split(": ")[1].SplitByAndParse(",", long.Parse).ToList();
-        return GetPossibleAValues(program, 0, 0, 0, 0).Min();;
+        return GetPossibleAValues(program, 0, 0, 0, 0).Min();
     }
 
     private static List<long> Execute(List<long> program, long a, long b, long c)
@@ -87,15 +87,16 @@ public class Day17() : Day(17, 2024)
         a*=8;
         for(var i = 0; i < 8; i++)
         {
-            var output = Execute(program, a + i, b, c);
-            if (program[^(depth+1)..].SequenceEqual(output))
+            var ai = a+i;
+            var d1 = depth+1;
+            var output = Execute(program, ai, b, c);
+            if (program[^d1..].SequenceEqual(output))
             {
-                if (depth + 1 == program.Count) 
-                    possibleA.Add(a + i);
-                possibleA.AddRange(GetPossibleAValues(program, a + i, b, c, depth + 1));
+                if (d1 == program.Count) 
+                    possibleA.Add(ai);
+                possibleA.AddRange(GetPossibleAValues(program, ai, b, c, d1));
             }
         }
         return possibleA;
     } 
-
 }
