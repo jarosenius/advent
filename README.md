@@ -41,3 +41,7 @@ Run the current day for the year 2020 using real data
 Run the fourth for the latest supported year day using real data
 
 > dotnet run --day 4
+
+Create a file for the current day for the year 2025. Includes fetching input (real, not example)
+
+> dotnet run --year 2025 --createDay

@@ -42,40 +42,41 @@ namespace Advent
         {
             Advent a = null;
             var config = new ConfigurationBuilder().AddEnvironmentVariables().AddUserSecrets<Program>().Build();
-        
-            await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async options => 
+
+            await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async options =>
             {
+                var client = new AocClient(config["AOC_TOKEN"]);
+
                 if (options.SetupYear.HasValue)
                 {
-                    await SetupNewYear(options.SetupYear.Value);
+                    await SetupNewYear(options.SetupYear.Value, client);
                 }
                 else if (options.CreateDay)
                 {
-                    await SetupDayForYear(options.Year, options.Day > 0 ? options.Day : DateTime.Today.Day);
+                    await SetupDayForYear(options.Year, options.Day > 0 ? options.Day : DateTime.Today.Day, client);
                 }
                 else
                 {
                     Console.WriteLine($"Options: UseExample = {options.UseExample}, Year = {options.Year}, Day = {options.Day}");
-                    var client = new AocClient(config["AOC_TOKEN"]);
                     a = await Advent.CreateForYear(options.Year, client);
                     if (a == null)
                     {
                         Console.WriteLine($"{options.Year} was not found among '{string.Join(", ", Advent.SupportedYears.Select(s => s.Key))}'.");
                         Console.WriteLine("Setting up classes. Please re-run");
-                        await SetupNewYear(options.Year);
+                        await SetupNewYear(options.Year, client);
                         return;
                     }
 
                     var daysToRun = new[] { Latest };
                     if (options.Day == 0)
                         daysToRun = Enumerable.Range(1, 25).ToArray();
-                    else if (options.Day > 0 && options.Day <= 25)
+                    else if (options.Day is > 0 and <= 25)
                         daysToRun = [options.Day];
 
-                    if(options.Year == DateTime.Now.Year && DateTime.Now.Month == 12 && DateTime.Now.Day < 25)
+                    if (options.Year == DateTime.Now.Year && DateTime.Now.Month == 12 && DateTime.Now.Day < 25)
                         daysToRun = daysToRun.TakeWhile(d => d <= DateTime.Now.Day).ToArray();
 
-                    if(options.Year > DateTime.Now.Year)
+                    if (options.Year > DateTime.Now.Year)
                     {
                         Console.WriteLine("Cannot run solutions from the future.");
                         daysToRun = [];
@@ -86,10 +87,10 @@ namespace Advent
                     {
                         Console.WriteLine($"The solution for the given year does not contain solutions for the following days: [{string.Join(",", daysNotCreated)}].");
                         Console.WriteLine("Setting up classes. Please re-run");
-                        daysNotCreated.ForEach(async d => await SetupDayForYear(options.Year, d));
+                        daysNotCreated.ForEach(async d => await SetupDayForYear(options.Year, d, client));
                         return;
                     }
-                    else if(daysToRun.Length == 0)
+                    else if (daysToRun.Length == 0)
                     {
                         Console.WriteLine($"There are no solution for the given year that can be run.");
                         return;
@@ -112,7 +113,7 @@ namespace Advent
             return basePath;
         }
 
-        private static async Task SetupNewYear(int year)
+        private static async Task SetupNewYear(int year, AocClient client)
         {
             Console.WriteLine($"Setting up new year {year}");
             Console.WriteLine(Directory.GetCurrentDirectory());
@@ -128,8 +129,7 @@ namespace Advent
             Directory.CreateDirectory(basePath);
             Directory.CreateDirectory(inputPath);
 
-            var dayTemplate = await File.ReadAllTextAsync(Path.Combine(TemplatePath, "Day.txt"));
-            await Parallel.ForEachAsync(Enumerable.Range(1, 25), async (d, c) => await SetupDayForYear(year, d));
+            await Parallel.ForEachAsync(Enumerable.Range(1, 25), async (d, _) => await SetupDayForYear(year, d, client));
 
             var advent = await File.ReadAllTextAsync($"{TemplatePath}/Advent.txt", Encoding.Default);
             advent = advent.Replace("__YEAR__", $"{year}");
@@ -138,7 +138,7 @@ namespace Advent
             Console.WriteLine($"Finished setting up year {year}.");
         }
 
-        private static async Task SetupDayForYear(int year, int d)
+        private static async Task SetupDayForYear(int year, int d, AocClient client)
         {
             var dayTemplate = await File.ReadAllTextAsync(Path.Combine(TemplatePath, "Day.txt"));
             var basePath = SetupPaths(year);
@@ -152,10 +152,12 @@ namespace Advent
                 .Replace("__DAYPAD__", $"{day}");
             var name = new FileInfo(day).Name;
             var newPath = $"{basePath}/Day{name}.cs";
+            var examplePath = $"{inputPath}/{day}_example.txt";
 
             await Task.WhenAll(
                 File.WriteAllTextAsync(newPath, content, Encoding.Default),
-                File.WriteAllTextAsync($"{inputPath}/{day}_example.txt", "", Encoding.Default));
+                Utils.FetchInputForDayAsync(year, d, client),
+                Path.Exists(examplePath) ? Task.CompletedTask : File.WriteAllTextAsync(examplePath, string.Empty, Encoding.Default));
         }
     }
 }
