@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Advent.Common;
-using SixLabors.ImageSharp;
 
 namespace Advent.y2024;
 
@@ -14,15 +14,29 @@ public class Day14() : Day(14, 2024)
         var wh = UsedExampleData ? (11, 7) : (101, 103);
         return CalculateSafetyFactor(wh.Item1, wh.Item2, 100, GetRobots(input));
     }
-
-
-
+    
     public override object Part2(List<string> input)
     {
-        //var wh = UsedExampleData ? (11, 7) : (101, 103);
-        //if(!UsedExampleData)
-        //    GenerateImages(wh.Item1, wh.Item2, GetRobots(input), 10000);
-        Console.WriteLine("I don't know how I should approach this as I don't know what I'm looking for. Generating images and scanning through them manually.");
+        if(UsedExampleData)
+        {
+            Console.WriteLine("Cannot use example data for this part");
+            return -1;
+        }
+        var wh = (101, 103);
+        var robots = GetRobots(input).ToImmutableList();
+        var current = CalculateSafetyFactor(wh.Item1, wh.Item2, 0, [.. robots]);
+        for (var i = 1; i < 20000; i++)
+        {
+            var copy = robots.ToList();
+            var now = CalculateSafetyFactor(wh.Item1, wh.Item2, i, copy);
+
+            /*
+            * Based on discussions in the AoC megathread
+            * If we have a low safety factor or if all robots are in unique positions then we have the tree.
+            */
+            if((double)now/current < 0.25 || copy.DistinctBy(kvp => kvp.Item1).Count() == copy.Count) 
+                return i;
+        }
         return -1;
     }
 
@@ -37,7 +51,8 @@ public class Day14() : Day(14, 2024)
 
     public static int CalculateSafetyFactor(int width, int height, int n, List<(Coordinate Position, Coordinate Velocity)> robots)
     {
-        var (q1, q2, q3, q4) = CountRobotsInQuadrants(width, height, GetUpdateRobotPositions(width, height, n, robots));
+        var updated = GetUpdateRobotPositions(width, height, n, robots);
+        var (q1, q2, q3, q4) = CountRobotsInQuadrants(width, height, updated);
         return q1 * q2 * q3 * q4;
     }
 
@@ -88,41 +103,4 @@ public class Day14() : Day(14, 2024)
         }
         return (q1, q2, q3, q4);
     }
-
-    private static void GenerateImages(int width, int height, List<(Coordinate Position, Coordinate Velocity)> robots, int iterations)
-    {
-        for (int n = 0; n < iterations; n++)
-        {
-            for (var i = 0; i < robots.Count; i++)
-            {
-                var (p, v) = robots[i];
-
-                var px = (p.X + v.X) % width;
-                var py = (p.Y + v.Y) % height;
-
-                if (px < 0)
-                    px += width;
-                if (py < 0)
-                    py += height;
-
-                robots[i] = (new Coordinate(px, py), v);
-            }
-
-            var grid = new int[width, height];
-            robots.ForEach(r => grid[r.Position.X, r.Position.Y]++);
-
-            CreateImage(grid, width, height, n+1);
-            
-        }
-    }
-
-    private static void CreateImage(int[,] grid, int width, int height, int iteration)
-    {
-        using var image = new Image<SixLabors.ImageSharp.PixelFormats.L8>(width, height);
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-                image[x, y] = new SixLabors.ImageSharp.PixelFormats.L8(grid[x, y] > 0 ? (byte)255 : (byte)0);
-        image.Save($"../../aoc/2024/14/robot_positions_{iteration:D5}.png");
-    }
 }
-
