@@ -5,7 +5,12 @@ namespace Advent.y2025;
 [AoC(2025)]
 public class Day01() : Day(1, 2025)
 {
-    public override object Part1(List<string> input)
+    public override object Part1(List<string> input) => Solve(input, true);
+
+    public override object Part2(List<string> input) => Solve(input, false);
+
+
+    private static int Solve(List<string> input, bool onlyEndPositions)
     {
         var pos = 50;
         var count = 0;
@@ -15,35 +20,26 @@ public class Day01() : Day(1, 2025)
             var dir = line[0];
             var distance = int.Parse(line[1..]);
 
-            pos = dir == 'L'
-                ? (pos - distance).Mod(100)
-                : (pos + distance) % 100;
-
-            if (pos == 0)
-                count++;
+            if (onlyEndPositions)
+            {
+                pos = Rotate(pos, distance, dir);
+                if (pos == 0)
+                    count++;
+            }
+            else
+            {
+                count += CountZeroCrossings(pos, distance, dir);
+                pos = Rotate(pos, distance, dir);
+            }
         }
 
         return count;
     }
-    public override object Part2(List<string> input)
-    {
-        var pos = 50;
-        var count = 0;
 
-        foreach (var line in input)
-        {
-            var dir = line[0];
-            var distance = int.Parse(line[1..]);
-
-            count += CountZeroCrossings(pos, distance, dir);
-
-            pos = dir == 'L'
-                ? (pos - distance).Mod(100)
-                : (pos + distance) % 100;
-        }
-
-        return count;
-    }
+    private static int Rotate(int pos, int distance, char dir) =>
+        dir == 'L'
+            ? (pos - distance).Mod(100)
+            : (pos + distance) % 100;
 
     private static int CountZeroCrossings(int start, int distance, char dir)
     {
@@ -60,6 +56,5 @@ public class Day01() : Day(1, 2025)
 
         return crossings;
     }
-
 }
 
