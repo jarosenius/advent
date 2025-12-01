@@ -187,7 +187,7 @@ namespace Advent
                 && XPos <= n.XPos + n.Content.Length
                 && n.XPos <= XPos + Content.Length;
         }
-        
+
         public static long GreatestCommonFactor(this long a, long b) => b == 0 ? a : b.GreatestCommonFactor(a % b);
         public static long LeastCommonMultiple(this long a, long b) => a * b / a.GreatestCommonFactor(b);
         public static long[] DiffEveryOther(this IEnumerable<long> list) =>
@@ -206,11 +206,23 @@ namespace Advent
             var path = GetInputForDay(day, year);
             var input = await client.FetchInputAsync(year, day);
             input = input.TrimEnd();
-            if(input != string.Empty)
+            if (input != string.Empty)
             {
                 await File.WriteAllTextAsync(path, input, Encoding.Default, CancellationToken.None);
                 Console.WriteLine($"Saved input for day {day} to {path}");
             }
+        }
+
+        public static int Mod(this int value, int modulus)
+        {
+            var result = value % modulus;
+            return result < 0 ? result + modulus : result;
+        }
+
+        public static long Mod(this long value, long modulus)
+        {
+            var result = value % modulus;
+            return result < 0 ? result + modulus : result;
         }
     }
 }
