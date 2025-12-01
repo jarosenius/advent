@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Advent.Http;
 
@@ -9,17 +10,18 @@ public class AocClient
 {
     private const string Cookie = "Cookie";
     private const string Session = "session=";
-    private readonly HttpClient client;
-    public AocClient(string token)
+    private readonly HttpClient _client;
+    public AocClient(IConfiguration configuration)
     {
-        client = new HttpClient();
-        if(token != string.Empty)
-            client.DefaultRequestHeaders.Add(Cookie, $"{Session}{token}");
+        var token = configuration["AOC_TOKEN"] ?? throw new ArgumentException("AOC_TOKEN not found in environment variables or secrets.");
+        _client = new HttpClient();
+        if (token != string.Empty)
+            _client.DefaultRequestHeaders.Add(Cookie, $"{Session}{token}");
     }
 
     public async Task<string> FetchInputAsync(int year, int day)
     {
-        if(!client.DefaultRequestHeaders.Any(h => h.Key == Cookie && h.Value.First().Contains($"{Session}")))
+        if (!_client.DefaultRequestHeaders.Any(h => h.Key == Cookie && h.Value.First().Contains($"{Session}")))
         {
             Console.WriteLine("The http client has an emtpy token. Either the environment variable 'AOC_TOKEN' does not exist or the client was created incorrectly.");
             return string.Empty;
@@ -27,7 +29,7 @@ public class AocClient
         try
         {
             var uri = $"https://adventofcode.com/{year}/day/{day}/input";
-            var request = await client.GetAsync(uri);
+            var request = await _client.GetAsync(uri);
             request.EnsureSuccessStatusCode();
             return await request.Content.ReadAsStringAsync();
 

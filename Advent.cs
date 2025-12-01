@@ -9,10 +9,10 @@ namespace Advent
 {
     public abstract class Advent(int year, AocClient client)
     {
-        private static Dictionary<int, Type> supportedYears;
+        private static Dictionary<int, Type> _supportedYears;
         public static Dictionary<int, Type> SupportedYears
         {
-            get { return supportedYears ??= GetSupportedYears(); }
+            get { return _supportedYears ??= GetSupportedYears(); }
         }
 
         public static Dictionary<int, Type> GetSupportedYears()
@@ -44,28 +44,16 @@ namespace Advent
                    select t;
         }
 
-        public static async Task<Advent> CreateForYear(int year, AocClient client)
-        {
-            if (SupportedYears.TryGetValue(year, out var advent))
-            {
-                var instance = (Advent)Activator.CreateInstance(advent, client);
-                await instance.SetupDays();
-                return instance; 
-            }
-            return null;
-        }
-
         public static Day CreateDay(Type t)
         {
             return (Day)Activator.CreateInstance(t);
         }
 
-        public readonly int YEAR = year;
-        public bool IsFirstRun = true;
+        public readonly int Year = year;
 
         public async Task SetupDays()
         {
-            var days = GetDaysForYear(YEAR)
+            var days = GetDaysForYear(Year)
             .Select(CreateDay)
             .Select(d => AddDay(d, client)).ToList();
             await Task.WhenAll(days);
@@ -75,16 +63,16 @@ namespace Advent
 
         public async Task AddDay(Day day, AocClient aocClient)
         {
-            if (day.DAY <= 0 || day.DAY > 25 || YEAR != day.YEAR)
+            if (day.DAY <= 0 || day.DAY > 25 || Year != day.YEAR)
                 return;
             Days[day.DAY] = day;
-            
-            if(YEAR < DateTime.Now.Year || (YEAR == DateTime.Now.Year && day.DAY <= DateTime.Now.Day))
+
+            if (Year < DateTime.Now.Year || (Year == DateTime.Now.Year && day.DAY <= DateTime.Now.Day))
             {
-                var inputPath = Utils.GetInputForDay(day.DAY, YEAR);
-                if(!File.Exists(inputPath))
+                var inputPath = Utils.GetInputForDay(day.DAY, Year);
+                if (!File.Exists(inputPath))
                 {
-                    await Utils.FetchInputForDayAsync(YEAR, day.DAY, aocClient);
+                    await Utils.FetchInputForDayAsync(Year, day.DAY, aocClient);
                 }
             }
         }
@@ -94,32 +82,25 @@ namespace Advent
         public async Task SolveAsync(bool useExampleData, params int[] daysToSolve)
         {
             Days.TryGetValue(daysToSolve.First(), out var day);
-            await day?.Solve(true); // First run is a bit slower so run it once before the real run.
+            if (day == null)
+                return;
+
+            await day.Solve(true); // First run is a bit slower so run it once before the real run.
 
             await Parallel.ForEachAsync(
                 daysToSolve,
-                async (d, c) =>
+                async (d, _) =>
                 {
-                    if (Days.TryGetValue(d, out var day) == false)
+                    if (Days.TryGetValue(d, out var result) == false)
                     {
                         Console.WriteLine($"Could not find day {d}");
                         await Task.CompletedTask;
+                        return;
                     }
 
-                    await day.Solve(useExampleData);
+                    await result.Solve(useExampleData);
                 }
             );
-        }
-
-        public void PresentResults(params int[] daysToPresent)
-        {
-            foreach (var d in daysToPresent)
-            {
-                if (Days.TryGetValue(d, out var day) == false || day.HasSolution == false)
-                    continue;
-
-                day.PresentResult();
-            }
         }
 
         public void PresentAll()

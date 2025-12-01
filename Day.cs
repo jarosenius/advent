@@ -27,13 +27,16 @@ namespace Advent
             ExampleInput = await File.ReadAllLinesAsync(Utils.GetExampleInputForDay(DAY, YEAR));
             Input = await File.ReadAllLinesAsync(Utils.GetInputForDay(DAY, YEAR));
 
+            if (ExampleInput.Length == 0 || ExampleInput.Length == 1 && string.IsNullOrWhiteSpace(ExampleInput[0]))
+                return (0, 0, 0, 0);
+
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            ResultPart1 = Part1(example ? ExampleInput.ToList() : Input.ToList());
+            ResultPart1 = Part1(example ? [.. ExampleInput] : [.. Input]);
             sw.Stop();
             TimeToExecutePart1 = sw.Elapsed;
             sw.Restart();
-            ResultPart2 = Part2(example ? ExampleInput.ToList() : Input.ToList());
+            ResultPart2 = Part2(example ? [.. ExampleInput] : [.. Input]);
             sw.Stop();
             TimeToExecutePart2 = sw.Elapsed;
             HasSolution = ResultPart1 != null && long.TryParse(ResultPart1.ToString(), out var res1) && res1 != 0 || ResultPart2 != null && long.TryParse(ResultPart2.ToString(), out var res2) && res2 != 0;
