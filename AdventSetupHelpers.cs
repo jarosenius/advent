@@ -21,11 +21,7 @@ public static class AdventSetupHelpers
             return;
         }
 
-        var basePath = $"./{year}";
-        var inputPath = $"{basePath}/input";
-
-        Directory.CreateDirectory(basePath);
-        Directory.CreateDirectory(inputPath);
+        var (basePath, _) = SetupPaths(year);
 
         await Parallel.ForEachAsync(
             Enumerable.Range(1, 25),
@@ -40,10 +36,8 @@ public static class AdventSetupHelpers
 
     public static async Task SetupDayForYearAsync(int year, int day, AocClient client)
     {
-        SetupPaths(year);
+        var (basePath, inputPath) = SetupPaths(year);
 
-        var basePath = $"./{year}";
-        var inputPath = $"{basePath}/input";
         var dayPadded = day.ToString().PadLeft(2, '0');
 
         var dayFilePath = $"{basePath}/Day{dayPadded}.cs";
@@ -69,7 +63,7 @@ public static class AdventSetupHelpers
                 : File.WriteAllTextAsync(examplePath, string.Empty, Encoding.Default));
     }
 
-    private static void SetupPaths(int year)
+    private static (string basePath, string inputPath) SetupPaths(int year)
     {
         var basePath = $"./{year}";
         var inputPath = $"{basePath}/input";
@@ -78,5 +72,7 @@ public static class AdventSetupHelpers
             Directory.CreateDirectory(basePath);
         if (!Directory.Exists(inputPath))
             Directory.CreateDirectory(inputPath);
+
+        return (basePath, inputPath);
     }
 }

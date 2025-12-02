@@ -26,10 +26,9 @@ namespace Advent
                     && t.IsSubclassOf(typeof(Advent))
                     && t.IsAbstract == false
                     && attributes.OfType<AoCAttribute>().Any()
-                select new KeyValuePair<int, Type>(
-                    attributes.Cast<AoCAttribute>().FirstOrDefault().Year,
-                    t
-                );
+                let aocAttribute = attributes.OfType<AoCAttribute>().FirstOrDefault()
+                where aocAttribute != null
+                select new KeyValuePair<int, Type>(aocAttribute.Year, t);
 
             return adventsWithYear.ToDictionary(x => x.Key, x => x.Value);
         }
