@@ -52,12 +52,12 @@ namespace Advent
 
         public static IEnumerable<int> ReadLinesAsInt(this IEnumerable<string> lines)
         {
-            return lines.Select(n => int.Parse(n));
+            return lines.Select(int.Parse);
         }
 
         public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
         {
-            foreach (T item in enumeration)
+            foreach (var item in enumeration)
             {
                 action(item);
             }
@@ -69,9 +69,7 @@ namespace Advent
             string splitSecond
         )
         {
-            return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries)
-                .Select(p => p.SplitByAndParseToInt(splitSecond))
-                .ToArray();
+            return [.. line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries).Select(p => p.SplitByAndParseToInt(splitSecond))];
         }
 
         public static long[][] SplitByFirstThenBySecondAndParseToLong(
@@ -80,9 +78,7 @@ namespace Advent
             string splitSecond
         )
         {
-            return line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries)
-                .Select(p => p.SplitByAndParse(splitSecond, long.Parse))
-                .ToArray();
+            return [.. line.Split(splitFirst, StringSplitOptions.RemoveEmptyEntries).Select(p => p.SplitByAndParse(splitSecond, long.Parse))];
         }
 
         public static int[] SplitByAndParseToInt(this string line, string split)
@@ -95,15 +91,13 @@ namespace Advent
         }
         public static T[] SplitByAndParse<T>(this string line, string split, Func<string, T> parse)
         {
-            return line.Split(split, StringSplitOptions.RemoveEmptyEntries)
-                .Select(parse)
-                .ToArray();
+            return [.. line.Split(split, StringSplitOptions.RemoveEmptyEntries).Select(parse)];
         }
 
         public static T[][] CreateMapWithSize<T>(int width, int length)
         {
             var grid = new T[length][];
-            for (int i = 0; i < grid.Length; i++)
+            for (var i = 0; i < grid.Length; i++)
             {
                 grid[i] = new T[width];
             }
@@ -153,7 +147,7 @@ namespace Advent
         {
             var toKeep = source.SkipWhile(i => !condition(i));
             var list = new List<T> { toKeep.First() };
-            foreach (T item in toKeep.Skip(1))
+            foreach (var item in toKeep.Skip(1))
             {
                 if (condition(item) == false)
                 {
@@ -191,7 +185,7 @@ namespace Advent
         public static long GreatestCommonFactor(this long a, long b) => b == 0 ? a : b.GreatestCommonFactor(a % b);
         public static long LeastCommonMultiple(this long a, long b) => a * b / a.GreatestCommonFactor(b);
         public static long[] DiffEveryOther(this IEnumerable<long> list) =>
-            list.Zip(list.Skip(1)).Select(p => p.Second - p.First).ToArray();
+            [.. list.Zip(list.Skip(1)).Select(p => p.Second - p.First)];
 
         public static async Task FetchInputForDayAsync(int year, IEnumerable<int> daysToFetch, AocClient client)
         {
