@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
@@ -39,5 +40,60 @@ public class AocClient
             Console.WriteLine($"Failed to download input for {year}/{day}: {e.Message}");
         }
         return string.Empty;
+    }
+
+    public async Task<string> FetchExampleInputAsync(int year, int day)
+    {
+        try
+        {
+            var uri = $"https://adventofcode.com/{year}/day/{day}";
+            var response = await _client.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            var html = await response.Content.ReadAsStringAsync();
+
+            return ExtractExampleInput(html);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to download example input for {year}/{day}: {e.Message}");
+        }
+        return string.Empty;
+    }
+
+    private static string ExtractExampleInput(string html)
+    {
+        const string pattern = "For example:.*?<pre><code>(.*?)</code></pre>";
+        var match = Regex.Match(html, pattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+
+        if (match.Success)
+        {
+            var content = match.Groups[1].Value;
+            return DecodeHtml(content).Trim();
+        }
+
+        var allCodeBlocks = Regex.Matches(html, "<pre><code>(.*?)</code></pre>", RegexOptions.Singleline);
+
+        foreach (Match codeBlock in allCodeBlocks)
+        {
+            var content = codeBlock.Groups[1].Value;
+            var decoded = DecodeHtml(content).Trim();
+
+            if (decoded.Contains('\n') && !content.Contains("<em>"))
+            {
+                return decoded;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static string DecodeHtml(string html)
+    {
+        return html
+            .Replace("&lt;", "<")
+            .Replace("&gt;", ">")
+            .Replace("&amp;", "&")
+            .Replace("&quot;", "\"")
+            .Replace("&#39;", "'");
     }
 }

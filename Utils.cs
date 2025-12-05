@@ -187,20 +187,19 @@ namespace Advent
         public static long[] DiffEveryOther(this IEnumerable<long> list) =>
             [.. list.Zip(list.Skip(1)).Select(p => p.Second - p.First)];
 
-        public static async Task FetchInputForDayAsync(int year, IEnumerable<int> daysToFetch, AocClient client)
-        {
-            foreach (var day in daysToFetch)
-            {
-                await FetchInputForDayAsync(year, day, client);
-            }
-        }
+
+        public static async Task FetchExampleInputForDayAsync(int year, int day, AocClient client)
+            => await FetchInputForDayAsync(year, day, GetExampleInputForDay, client.FetchExampleInputAsync, false);
 
         public static async Task FetchInputForDayAsync(int year, int day, AocClient client)
+         => await FetchInputForDayAsync(year, day, GetInputForDay, client.FetchInputAsync);
+
+        private static async Task FetchInputForDayAsync(int year, int day, Func<int, int, string> getInputPath, Func<int, int, Task<string>> fetchInput, bool checkForExisting = true)
         {
-            var path = GetInputForDay(day, year);
-            var input = await client.FetchInputAsync(year, day);
+            var path = getInputPath(day, year);
+            var input = await fetchInput(year, day);
             input = input.TrimEnd();
-            if (input != string.Empty)
+            if (checkForExisting == false || !string.IsNullOrWhiteSpace(input))
             {
                 await File.WriteAllTextAsync(path, input, Encoding.Default, CancellationToken.None);
                 Console.WriteLine($"Saved input for day {day} to {path}");
@@ -218,5 +217,7 @@ namespace Advent
             var result = value % modulus;
             return result < 0 ? result + modulus : result;
         }
+
+
     }
 }

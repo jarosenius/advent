@@ -73,6 +73,12 @@ namespace Advent
                 {
                     await Utils.FetchInputForDayAsync(Year, day.DAY, aocClient);
                 }
+
+                inputPath = Utils.GetExampleInputForDay(day.DAY, Year);
+                if (!File.Exists(inputPath))
+                {
+                    await Utils.FetchExampleInputForDayAsync(Year, day.DAY, aocClient);
+                }
             }
         }
 

@@ -58,6 +58,7 @@ public static class AdventSetupHelpers
         await Task.WhenAll(
             File.WriteAllTextAsync(dayFilePath, content, Encoding.Default),
             Utils.FetchInputForDayAsync(year, day, client),
+            Utils.FetchExampleInputForDayAsync(year, day, client),
             File.Exists(examplePath)
                 ? Task.CompletedTask
                 : File.WriteAllTextAsync(examplePath, string.Empty, Encoding.Default));
