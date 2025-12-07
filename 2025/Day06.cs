@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,14 +34,23 @@ public class Day06() : Day(6, 2025)
     private static List<string> GetCephalopodMathColumn(List<string> column)
     {
         var op = column[^1].Trim();
-        var newColumn = new List<string>();
-        var maxLength = column.Max(r => r.Trim().Length);
         var withoutOp = column.Take(column.Count - 1).ToList();
+        var maxLength = withoutOp.Max(r => r.Trim().Length);
+        var newColumn = new List<string>(maxLength + 1);
+
+        var sb = new StringBuilder(withoutOp.Count);
         for (var i = 0; i < maxLength; i++)
         {
-            newColumn.Add(new string(withoutOp.Select(r => r[i]).ToArray()));
+            foreach (var trimmed in withoutOp.Select(row => row.Trim()))
+            {
+                sb.Append(i < trimmed.Length ? trimmed[i] : ' ');
+            }
+            newColumn.Add(sb.ToString());
+            sb.Clear();
         }
-        return [.. newColumn, op];
+
+        newColumn.Add(op);
+        return newColumn;
     }
 
     private static List<List<string>> CreateColumns(List<string> input)
@@ -52,37 +60,31 @@ public class Day06() : Day(6, 2025)
 
         var length = input[0].Length;
         var result = new List<List<string>>();
-        var d = new ConcurrentDictionary<int, StringBuilder>();
+        var column = new StringBuilder[input.Count];
 
         for (var i = 0; i < length; i++)
         {
             var chars = input.Select(r => r[i]).ToArray();
             if (chars.All(c => c == ' '))
             {
-                if (d.Count > 0)
+                if (column[0] != null)
                 {
-                    result.Add(d.OrderBy(kv => kv.Key).Select(kv => kv.Value.ToString()).ToList());
-                    d.Clear();
+                    result.Add([.. column.Select(sb => sb?.ToString() ?? "")]);
+                    column = new StringBuilder[input.Count];
                 }
-                continue;
             }
 
             for (var j = 0; j < chars.Length; j++)
             {
-                d.AddOrUpdate(j, _ =>
-                {
-                    var sb = new StringBuilder();
-                    sb.Append(chars[j]);
-                    return sb;
-                }, (_, existing) =>
-                {
-                    existing.Append(chars[j]);
-                    return existing;
-                });
+                column[j] ??= new StringBuilder();
+                if (i < input[j].Length)
+                    column[j].Append(input[j][i]);
             }
 
         }
-        result.Add(d.OrderBy(kv => kv.Key).Select(kv => kv.Value.ToString()).ToList());
+
+        if (column[0] != null)
+            result.Add([.. column.Select(sb => sb?.ToString() ?? "")]);
 
         return result;
     }
