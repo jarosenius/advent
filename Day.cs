@@ -44,26 +44,56 @@ namespace Advent
 
         public void PresentResult()
         {
-            var color = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"--- Running Day {DAY} ({YEAR}) using {(UsedExampleData ? "example" : "regular")} data");
+            var originalColor = Console.ForegroundColor;
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine();
+            Console.WriteLine("╔═══════════════════════════════════════════════════════════════╗");
+            Console.Write("║ ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"Day {DAY:D2} ({YEAR})".PadRight(48));
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"{(UsedExampleData ? "[EXAMPLE]" : "[LIVE]"),13}");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(" ║");
+            Console.WriteLine("╠═══════════════════════════════════════════════════════════════╣");
+
+            Console.Write("║ ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Part 1: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"{ResultPart1}".PadRight(15));
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("| ");
+            Console.Write($"{ResultPart1,-28}");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write(" ".PadRight(12));
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"{TimeToExecutePart1.TotalMilliseconds}ms");
+            Console.Write($"{FormatTime(TimeToExecutePart1),13}");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(" ║");
+
+            Console.Write("║ ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Part 2: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"{ResultPart2}".PadRight(15));
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("| ");
+            Console.Write($"{ResultPart2,-28}");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write(" ".PadRight(12));
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"{TimeToExecutePart2.TotalMilliseconds}ms");
-            Console.ForegroundColor = color;
+            Console.Write($"{FormatTime(TimeToExecutePart2),13}");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(" ║");
+
+            Console.WriteLine("╚═══════════════════════════════════════════════════════════════╝");
+            Console.ForegroundColor = originalColor;
+            Console.WriteLine();
+        }
+
+        private static string FormatTime(TimeSpan time)
+        {
+            if (time.TotalSeconds >= 1)
+                return $"{time.TotalSeconds:F2}s";
+            if (time.TotalMilliseconds >= 1)
+                return $"{time.TotalMilliseconds:F2}ms";
+            return $"{time.TotalMicroseconds:F2}μs";
         }
 
         public abstract object Part1(List<string> input);
