@@ -68,7 +68,7 @@ public class AocClient
         if (match.Success)
         {
             var content = match.Groups[1].Value;
-            return DecodeHtml(content).Trim();
+            return DecodeHtml(content);
         }
 
         var allCodeBlocks = Regex.Matches(html, "<pre><code>(.*?)</code></pre>", RegexOptions.Singleline);

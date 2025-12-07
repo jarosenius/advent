@@ -198,7 +198,6 @@ namespace Advent
         {
             var path = getInputPath(day, year);
             var input = await fetchInput(year, day);
-            input = input.TrimEnd();
             if (checkForExisting == false || !string.IsNullOrWhiteSpace(input))
             {
                 await File.WriteAllTextAsync(path, input, Encoding.Default, CancellationToken.None);
