@@ -47,7 +47,6 @@ namespace Advent
             var originalColor = Console.ForegroundColor;
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine();
             Console.WriteLine("╔═══════════════════════════════════════════════════════════════╗");
             Console.Write("║ ");
             Console.ForegroundColor = ConsoleColor.White;
@@ -84,7 +83,6 @@ namespace Advent
 
             Console.WriteLine("╚═══════════════════════════════════════════════════════════════╝");
             Console.ForegroundColor = originalColor;
-            Console.WriteLine();
         }
 
         private static string FormatTime(TimeSpan time)
