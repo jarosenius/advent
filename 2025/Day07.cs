@@ -1,50 +1,59 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Advent.Common;
 
 namespace Advent.y2025;
 
 [AoC(2025)]
 public class Day07() : Day(7, 2025)
 {
-    public override object Part1(List<string> input) => CountBeamSplits(input);
-    public override object Part2(List<string> input)
-    {
-        return null;
-    }
+    public override object Part1(List<string> input) => CountBeamSplits(input, false);
+    public override object Part2(List<string> input) => CountBeamSplits(input, true);
 
-    private static int CountBeamSplits(List<string> input)
+    private static long CountBeamSplits(List<string> input, bool countTimelines)
     {
         var start = input[0].IndexOf('S');
-        var active = new HashSet<int> { start };
-        var sum = 0;
+        var timelines = new Dictionary<int, long> { { start, 1 } };
+        var next = new Dictionary<int, long>();
+        var sum = 0L;
 
         for (var row = 1; row < input.Count; row++)
         {
             var line = input[row];
-            var next = new HashSet<int>();
+            next.Clear();
 
-            foreach (var col in active)
+            foreach (var (col, count) in timelines)
             {
-                if (col >= 0 && col < line.Length && line[col] == '^')
+                if (col < 0 || col >= line.Length)
+                    continue;
+
+                if (line[col] == '^')
                 {
-                    sum++;
-                    next.Add(col - 1);
-                    next.Add(col + 1);
+                    sum += countTimelines ? count : 1;
+                    AddTimeline(next, col - 1, count, 0, line.Length);
+                    AddTimeline(next, col + 1, count, 0, line.Length);
                 }
                 else
                 {
-                    next.Add(col);
+                    AddTimeline(next, col, count, 0, line.Length);
                 }
             }
 
-            active = [.. next.Where(c => c >= 0 && c < line.Length)];
-
-            if (active.Count == 0)
+            if (next.Count == 0)
                 break;
+
+            (timelines, next) = (next, timelines);
         }
 
         return sum;
+    }
+
+    private static void AddTimeline(Dictionary<int, long> dict, int col, long count, int minInc, int maxExc)
+    {
+        if (col < minInc || col >= maxExc)
+            return;
+
+        dict[col] = dict.TryGetValue(col, out var existing) ? existing + count : count;
     }
 }
 
