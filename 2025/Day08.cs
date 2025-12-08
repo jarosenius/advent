@@ -29,7 +29,26 @@ public class Day08() : Day(8, 2025)
     }
     public override object Part2(List<string> input)
     {
-        return null;
+        var junctionBoxes = input.Select(Coordinate3D.Parse).ToList();
+        var pairs = GetSorted(junctionBoxes);
+        var uf = new UnionFind(junctionBoxes.Count);
+
+        var iLast = 0;
+        var jLast = 0;
+
+        foreach (var (i, j, _) in pairs)
+        {
+            if (!uf.Union(i, j))
+                continue;
+
+            iLast = i;
+            jLast = j;
+
+            if (uf.GetComponentCount() == 1)
+                break;
+        }
+
+        return (long)junctionBoxes[iLast].X * junctionBoxes[jLast].X;
     }
 
     private static List<(int Index1, int Index2, double Distance)> GetSorted(List<Coordinate3D> junctionBoxes) =>

@@ -6,11 +6,12 @@ public class UnionFind
 {
     private readonly int[] _parent;
     private readonly int[] _rank;
-
+    private int _componentCount;
     public UnionFind(int size)
     {
         _parent = new int[size];
         _rank = new int[size];
+        _componentCount = size;
 
         for (var i = 0; i < size; i++)
         {
@@ -43,8 +44,11 @@ public class UnionFind
             _rank[rootX]++;
         }
 
+        _componentCount--;
         return true;
     }
+
+    public int GetComponentCount() => _componentCount;
 
     public List<int> GetComponentSizes()
     {
