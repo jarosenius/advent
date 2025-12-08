@@ -9,10 +9,8 @@ public class Day08() : Day(8, 2025)
 {
     public override object Part1(List<string> input)
     {
-        var junctionBoxes = input.Select(Coordinate3D.Parse).ToList();
         var connections = UsedExampleData ? 10 : 1000;
-        var pairs = GetSorted(junctionBoxes);
-        var uf = new UnionFind(junctionBoxes.Count);
+        var (_, pairs, uf) = Setup(input);
 
         for (var i = 0; i < connections && i < pairs.Count; i++)
         {
@@ -29,9 +27,7 @@ public class Day08() : Day(8, 2025)
     }
     public override object Part2(List<string> input)
     {
-        var junctionBoxes = input.Select(Coordinate3D.Parse).ToList();
-        var pairs = GetSorted(junctionBoxes);
-        var uf = new UnionFind(junctionBoxes.Count);
+        var (junctionBoxes, pairs, uf) = Setup(input);
 
         var iLast = 0;
         var jLast = 0;
@@ -49,6 +45,14 @@ public class Day08() : Day(8, 2025)
         }
 
         return (long)junctionBoxes[iLast].X * junctionBoxes[jLast].X;
+    }
+
+    private (List<Coordinate3D> JunctionBoxes, List<(int, int, double)> Pairs, UnionFind Uf) Setup(List<string> input)
+    {
+        var junctionBoxes = input.Select(Coordinate3D.Parse).ToList();
+        var pairs = GetSorted(junctionBoxes);
+        var uf = new UnionFind(junctionBoxes.Count);
+        return (junctionBoxes, pairs, uf);
     }
 
     private static List<(int Index1, int Index2, double Distance)> GetSorted(List<Coordinate3D> junctionBoxes) =>
