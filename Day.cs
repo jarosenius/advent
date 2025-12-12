@@ -25,6 +25,10 @@ namespace Advent
             UsedExampleData = example;
             ExampleInput = await File.ReadAllLinesAsync(Utils.GetExampleInputForDay(DAY, YEAR));
             Input = await File.ReadAllLinesAsync(Utils.GetInputForDay(DAY, YEAR));
+            if (ExampleInput.Length > 0 && ExampleInput[^1] == "\r\n")
+                ExampleInput = ExampleInput[..^1];
+            if (Input.Length > 0 && Input[^1] == "\r\n")
+                Input = Input[..^1];
 
             if (ExampleInput.Length == 0 || ExampleInput.Length == 1 && string.IsNullOrWhiteSpace(ExampleInput[0]))
                 return (0, 0, 0, 0);
