@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Advent.Common;
 
 namespace Advent.y2025;
 
@@ -10,23 +11,8 @@ public partial class Day10() : Day(10, 2025)
 {
     public override object Part1(List<string> input) => input.Sum(SolveMachine);
 
-    public override object Part2(List<string> input)
-    {
-        /*
-         * Looking at the example I can see that it's a ILP problem.
-         *         b1  b2    b3  b4    b5    b6
-         * [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
-         * b6 = 3, b2 + b6 = 5, b3 + b4 + b5 = 4, b1 + b2 + b4 = 7.
-         * and so on.
-         * i = 1..n (n = number of buttons)
-         * b[i] = number of presses for button i
-         * j = 1..m (m = number of counters)
-         * sum(b[i] for all buttons i that affect counter j) = target[j]
-         * minimize sum(b[i]) for i = 1..n
-         * So far I haven't been able to create a solution that works in reasonable time by myself.
-         */
-        return null;
-    }
+    public override object Part2(List<string> input) => input.Sum(SolveMachineJoltage);
+
 
     private static int SolveMachine(string line)
     {
@@ -59,6 +45,107 @@ public partial class Day10() : Day(10, 2025)
         return minPresses == int.MaxValue ? 0 : minPresses;
     }
 
+    private static long SolveMachineJoltage(string line)
+    {
+        var (targets, buttons) = ParseMachineJoltage(line);
+
+        var result = Solve(targets, [.. buttons.Select(b => b.ToArray())]);
+        return result ?? -1;
+    }
+
+    private static long? Solve(int[] targets, int[][] buttons)
+    {
+        /*
+         * Inspiration from: https://github.com/xiety/AdventOfCode/blob/main/2025/0/Problem10/Problem10.cs
+         */
+        var cache = new Dictionary<long, long?>();
+        var numComponents = targets.Length;
+        var numButtons = buttons.Length;
+
+        var buttonMasks = new int[numButtons];
+        for (var b = 0; b < numButtons; b++)
+        {
+            var mask = buttons[b].Aggregate(0, (current, c) => current | (1 << c));
+            buttonMasks[b] = mask;
+        }
+
+        var parityResults = new int[1 << numButtons];
+        for (var m = 0; m < parityResults.Length; m++)
+        {
+            var resultMask = 0;
+            for (var b = 0; b < numButtons; b++)
+                if (((m >> b) & 1) == 1)
+                    resultMask ^= buttonMasks[b];
+            parityResults[m] = resultMask;
+        }
+
+        return SolveRecursive(targets);
+
+        long GetHashCode(int[] arr) => arr.Aggregate<int, long>(0, (current, t) => current * 31 + t);
+
+        long? SolveRecursive(int[] target)
+        {
+            var allZero = target.All(t => t == 0);
+            if (allZero)
+                return 0;
+
+            var key = GetHashCode(target);
+            if (cache.TryGetValue(key, out var cached))
+                return cached;
+
+            var parityMask = 0;
+            for (var i = 0; i < target.Length; i++)
+                if ((target[i] & 1) == 1)
+                    parityMask |= 1 << i;
+
+            long? minCost = null;
+
+            for (var m = 0; m < (1 << numButtons); m++)
+            {
+                var maskCost = System.Numerics.BitOperations.PopCount((uint)m);
+                if (maskCost >= minCost)
+                    continue;
+
+                if (parityResults[m] != parityMask)
+                    continue;
+
+                var newTarget = new int[numComponents];
+                var valid = true;
+
+                for (var c = 0; c < numComponents; c++)
+                {
+                    var contribution = 0;
+                    for (var b = 0; b < numButtons; b++)
+                    {
+                        if (((m >> b) & 1) == 1 && ((buttonMasks[b] >> c) & 1) == 1)
+                            contribution++;
+                    }
+
+                    var remaining = target[c] - contribution;
+                    if (remaining < 0 || (remaining & 1) != 0)
+                    {
+                        valid = false;
+                        break;
+                    }
+
+                    newTarget[c] = remaining >> 1;
+                }
+
+                if (!valid)
+                    continue;
+
+                var res = SolveRecursive(newTarget);
+                if (!res.HasValue)
+                    continue;
+                var cost = maskCost + (res.Value << 1);
+                minCost = minCost.HasValue ? Math.Min(minCost.Value, cost) : cost;
+            }
+
+            cache[key] = minCost;
+            return minCost;
+        }
+    }
+
     private static (bool[] target, List<List<int>> buttons) ParseMachine(string line)
     {
         var target =
@@ -75,8 +162,25 @@ public partial class Day10() : Day(10, 2025)
         return (target, buttons);
     }
 
+    private static (int[] targets, List<List<int>> buttons) ParseMachineJoltage(string line)
+    {
+        var targets =
+            JoltageRegex()
+                .Match(line).Groups[1].Value.SplitByAndParseToInt(",");
+
+        var buttons =
+            ButtonRegex()
+                .Matches(line)
+                .Select(m => m.Groups[1].Value.SplitByAndParseToInt(",").ToList())
+            .ToList();
+
+        return (targets, buttons);
+    }
+
     [GeneratedRegex(@"\[([.#]+)\]")]
     private static partial Regex TargetRegex();
     [GeneratedRegex(@"\(([0-9,]+)\)")]
     private static partial Regex ButtonRegex();
+    [GeneratedRegex(@"\{([0-9,]+)\}")]
+    private static partial Regex JoltageRegex();
 }
